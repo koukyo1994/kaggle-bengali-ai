@@ -67,7 +67,7 @@ class TrainDataset(torchdata.Dataset):
             label[0] = grapheme
             label[1] = vowel
             label[2] = consonant
-        return image, label
+        return {"images": image, "targets": label}
 
 
 class TestDataset(torchdata.Dataset):

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from catalyst.dl import SupervisedRunner
 
+from src.callbacks import MacroAverageRecall
 from src.dataset import get_loader
 from src.losses import get_loss
 from src.models import BengaliClassifier
@@ -22,6 +23,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = load_config(args.config)
+
+    ct.utils.set_global_seed(config.seed)
+    ct.utils.prepare_cudnn(deterministic=True)
+
     output_root_dir = Path("output")
     output_base_dir = output_root_dir / args.config.replace(".yml",
                                                             "").split("/")[-1]
@@ -68,7 +73,11 @@ if __name__ == "__main__":
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
 
-        runner = SupervisedRunner(device=ct.utils.get_device())
+        runner = SupervisedRunner(
+            device=ct.utils.get_device(),
+            input_key="images",
+            input_target_key="targets",
+            output_key="logits")
         runner.train(
             model=model,
             criterion=criterion,
@@ -77,4 +86,8 @@ if __name__ == "__main__":
             logdir=output_dir,
             scheduler=scheduler,
             num_epochs=config.train.num_epochs,
+            callbacks=[MacroAverageRecall()],
+            main_metric="mar",
+            minimize_metric=False,
+            monitoring_params=None,
             verbose=True)

@@ -52,3 +52,4 @@ val:
 
 log_dir: log/
 num_workers: 2
+seed: 1213
