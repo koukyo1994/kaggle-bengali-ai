@@ -1,5 +1,7 @@
+albumentations==0.4.3
 catalyst==20.1.1
 easydict==1.9.0
+efficientnet-pytorch==0.6.1
 fastprogress==0.2.2
 feather-format==0.4.0
 h5py==2.10.0
@@ -25,6 +27,7 @@ opencv-contrib-python-headless==4.1.2.30
 pandas==0.25.3
 pandas-profiling==2.4.0
 Pillow==6.2.2
+pretrainedmodels==0.7.4
 pudb==2019.2
 PyYAML==5.3
 scikit-image==0.16.2

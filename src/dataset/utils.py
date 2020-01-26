@@ -1,25 +1,66 @@
-import gc
-
+import cv2
 import numpy as np
-import pandas as pd
-
-from pathlib import Path
-
-from src.constants import HEIGHT, WIDTH
 
 
-def prepare_images(data_dir: Path, data_type: str = "train"):
-    assert data_type in ["train", "test"]
-    images_df_list = [
-        pd.read_parquet(data_dir / f"{data_type}_image_data_{i}.parquet")
-        for i in range(4)
-    ]
-    images = [
-        df.iloc[:, 1:].values.reshape(-1, HEIGHT, WIDTH)
-        for df in images_df_list
-    ]
+def crop_image(image: np.ndarray, threshold=5. / 255.) -> np.ndarray:
+    assert image.ndim == 2
+    is_black = image > threshold
+    is_black_vertical = np.sum(is_black, axis=0) > 0
+    is_black_horizontal = np.sum(is_black, axis=1) > 0
 
-    del images_df_list
-    gc.collect()
+    left = np.argmax(is_black_horizontal)
+    right = np.argmax(is_black_horizontal[::-1])
+    top = np.argmax(is_black_vertical)
+    bottom = np.argmax(is_black_vertical[::-1])
+    height, width = image.shape
+    cropped_image = image[left:height - right, top:width - bottom]
+    return cropped_image
 
-    return np.concatenate(images, axis=0)
+
+def resize(image, size=(128, 128)) -> np.ndarray:
+    return cv2.resize(image, size)
+
+
+def crop_and_embed(image: np.ndarray, size=(128, 128)):
+    cropped = crop_image(image)
+    height, width = cropped.shape
+    aspect_ratio = height / width
+    embedded = np.zeros(size)
+    if aspect_ratio > 1.0:
+        if height > size[0]:
+            new_height = size[0]
+            new_width = int(size[0] * 1 / aspect_ratio)
+            image = resize(cropped, size=(new_height, new_width))
+
+            margin = size[1] - new_width
+            head = margin // 2
+            embedded[:, head:head + new_width] = image
+        else:
+            image = cropped
+            margin_height = size[0] - new_height
+            margin_width = size[1] - new_width
+
+            head_height = margin_height // 2
+            head_width = margin_width // 2
+            embedded[head_height:head_height +
+                     new_height, head_width:head_width + new_width] = image
+    else:
+        if width > size[1]:
+            new_width = size[1]
+            new_height = int(size[1] * aspect_ratio)
+            image = resize(cropped, size=(new_height, new_width))
+
+            margin = size[0] - new_height
+            head = margin // 2
+            embedded[head:head + new_height, :] = image
+        else:
+            image = cropped
+            margin_height = size[0] - new_height
+            margin_width = size[1] - new_width
+
+            head_height = margin_height // 2
+            head_width = margin_width // 2
+            embedded[head_height:head_height +
+                     new_height, head_width:head_width + new_width] = image
+
+    return embedded
