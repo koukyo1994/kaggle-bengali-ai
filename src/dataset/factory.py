@@ -6,7 +6,8 @@ import torch.utils.data as torchdata
 from pathlib import Path
 from typing import Tuple, Dict
 
-from .utils import crop_and_embed
+from .utils import (crop_and_embed, normalize, affine_image,
+                    random_erosion_or_dilation)
 
 
 class TrainDataset(torchdata.Dataset):
@@ -16,6 +17,8 @@ class TrainDataset(torchdata.Dataset):
                  transforms,
                  size: Tuple[int, int],
                  cls_levels: Dict[str, int] = None,
+                 affine=True,
+                 morphology=True,
                  onehot=True):
         self.df = df
         self.image_dir = image_dir
@@ -23,6 +26,8 @@ class TrainDataset(torchdata.Dataset):
         self.size = size
         self.onehot = onehot
         self.cls_levels = cls_levels
+        self.affine = affine
+        self.morphology = morphology
 
     def __len__(self):
         return len(self.df)
@@ -31,11 +36,15 @@ class TrainDataset(torchdata.Dataset):
         image_id = self.df.loc[idx, "image_id"]
         image_path = self.image_dir / f"{image_id}.png"
 
-        image = cv2.imread(image_path)
-        image = crop_and_embed(image, size=self.size)
-
+        image = cv2.imread(str(image_path))
         if self.transforms is not None:
-            image = self.transforms(image)
+            image = self.transforms(image=image)["image"]
+        image = normalize(image)
+        image = crop_and_embed(image, size=self.size, threshold=5. / 255.)
+        if self.affine:
+            image = affine_image(image)
+        if self.morphology:
+            image = random_erosion_or_dilation(image)
 
         grapheme = self.df.loc[idx, "grapheme_root"]
         vowel = self.df.loc[idx, "vowel_diacritic"]
@@ -60,12 +69,19 @@ class TrainDataset(torchdata.Dataset):
 
 
 class TestDataset(torchdata.Dataset):
-    def __init__(self, image_dir: Path, df: pd.DataFrame, transforms,
-                 size: Tuple[int, int]):
+    def __init__(self,
+                 image_dir: Path,
+                 df: pd.DataFrame,
+                 transforms,
+                 size: Tuple[int, int],
+                 affine=True,
+                 morphology=True):
         self.image_dir = image_dir
         self.df = df
         self.transforms = transforms
         self.size = size
+        self.affine = affine
+        self.morphology = morphology
 
     def __len__(self):
         return len(self.df)
@@ -75,14 +91,19 @@ class TestDataset(torchdata.Dataset):
         image_path = self.image_dir / f"{image_id}.png"
 
         image = cv2.imread(image_path)
-        image = crop_and_embed(image, size=self.size)
-
         if self.transforms is not None:
-            image = self.transforms(image)
+            image = self.transforms(image=image)["image"]
+        image = normalize(image)
+        image = crop_and_embed(image, size=self.size, threshold=5. / 255.)
+        if self.affine:
+            image = affine_image(image)
+        if self.morphology:
+            image = random_erosion_or_dilation(image)
+
         return image
 
 
-def get_loader(df_path: Path,
+def get_loader(df: pd.DataFrame,
                image_dir: Path,
                phase: str = "train",
                size: Tuple[int, int] = (128, 128),
@@ -90,11 +111,13 @@ def get_loader(df_path: Path,
                num_workers=2,
                transforms=None,
                cls_levels=None,
+               affine=True,
+               morphology=True,
                onehot=None):
-    assert phase in ["train", "val", "test"]
-    df = pd.read_csv(df_path)
+    assert phase in ["train", "valid", "test"]
     if phase == "test":
-        dataset = TestDataset(image_dir, df, transforms, size)
+        dataset = TestDataset(image_dir, df, transforms, size, affine,
+                              morphology)
         is_shuffle = False
         drop_last = False
     else:
@@ -110,10 +133,22 @@ def get_loader(df_path: Path,
                     "if 'onehot' is set to None, cls_levels must be set")
             else:
                 dataset = TrainDataset(  # type: ignore
-                    image_dir, df, transforms, size, cls_levels, onehot)
+                    image_dir,
+                    df,
+                    transforms,
+                    size,
+                    cls_levels,
+                    affine=affine,
+                    morphology=morphology,
+                    onehot=onehot)
         else:
             dataset = TrainDataset(  # type: ignore
-                image_dir, df, transforms, size)
+                image_dir,
+                df,
+                transforms,
+                size,
+                affine=affine,
+                morphology=morphology)
     return torchdata.DataLoader(
         dataset,
         batch_size=batch_size,

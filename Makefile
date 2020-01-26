@@ -2,7 +2,7 @@ IMG := torch-catalyst
 TAG := 2020.1.25
 NAME := bengali
 USER := kaggle
-CONFIG := config/sample_lgbm_regression.yml
+CONFIG := config/se_resnext.bce.0.yml
 
 docker-build:
 	make -C docker/ IMG=${IMG} TAG=${TAG}
@@ -23,3 +23,11 @@ jupyter:
 
 prepare:
 	python prepare.py
+
+
+
+train:
+	sudo chmod 777 /home/user
+	mkdir -p /home/user/.cache
+	sudo chmod 777 /home/user/.cache
+	python train.py --config ${CONFIG}

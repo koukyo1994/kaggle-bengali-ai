@@ -133,6 +133,7 @@ dmypy.json
 *.parquet
 *.png
 *.zip
+*.pth
 
 # editor
 .vscode
