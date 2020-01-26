@@ -20,3 +20,6 @@ env:
 jupyter:
 	sudo chown ${USER}:${USER} /home/user/.jupyter
 	jupyter lab --port 9000 --ip 0.0.0.0 --NotebookApp.token=
+
+prepare:
+	python prepare.py
