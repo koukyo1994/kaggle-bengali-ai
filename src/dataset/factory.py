@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Tuple, Dict
 
 from .utils import (crop_and_embed, normalize, affine_image,
-                    random_erosion_or_dilation)
+                    random_erosion_or_dilation, to_image)
 
 
 class TrainDataset(torchdata.Dataset):
@@ -37,15 +37,17 @@ class TrainDataset(torchdata.Dataset):
         image_path = self.image_dir / f"{image_id}.png"
 
         image = cv2.imread(str(image_path))
-        if self.transforms is not None:
-            image = self.transforms(image=image)["image"]
         image = normalize(image)
         image = crop_and_embed(image, size=self.size, threshold=5. / 255.)
         if self.affine:
             image = affine_image(image)
         if self.morphology:
             image = random_erosion_or_dilation(image)
-
+        image = to_image(image)
+        if self.transforms is not None:
+            image = self.transforms(image=image)["image"]
+        if image.shape[2] == 3:
+            image = np.moveaxis(image, -1, 0)
         grapheme = self.df.loc[idx, "grapheme_root"]
         vowel = self.df.loc[idx, "vowel_diacritic"]
         consonant = self.df.loc[idx, "consonant_diacritic"]
@@ -91,15 +93,17 @@ class TestDataset(torchdata.Dataset):
         image_path = self.image_dir / f"{image_id}.png"
 
         image = cv2.imread(image_path)
-        if self.transforms is not None:
-            image = self.transforms(image=image)["image"]
         image = normalize(image)
         image = crop_and_embed(image, size=self.size, threshold=5. / 255.)
         if self.affine:
             image = affine_image(image)
         if self.morphology:
             image = random_erosion_or_dilation(image)
-
+        image = to_image(image)
+        if self.transforms is not None:
+            image = self.transforms(image=image)["image"]
+        if image.shape[2] == 3:
+            image = np.moveaxis(image, -1, 0)
         return image
 
 

@@ -23,4 +23,8 @@ def get_transforms(config: edict):
     if config.transforms.Cutout.num_holes > 0:
         list_transforms.append(A.Cutout(**config.Cutout))
 
+    list_transforms.append(
+        A.Normalize(
+            mean=config.transforms.mean, std=config.transforms.std, p=1))
+
     return A.Compose(list_transforms, p=1.0)

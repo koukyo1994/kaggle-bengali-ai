@@ -85,6 +85,14 @@ def normalize(image: np.ndarray):
     return image
 
 
+def to_image(image: np.ndarray):
+    if image.ndim == 2:
+        image = np.stack([image, image, image])
+        image = np.moveaxis(image, 0, -1)
+    image = (255 - image * 255).astype(np.uint8)
+    return image
+
+
 def affine_image(image: np.ndarray):
     assert image.ndim == 2
     min_scale = 0.8

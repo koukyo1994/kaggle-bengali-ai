@@ -42,6 +42,8 @@ def _get_default():
     cfg.transforms.Contrast = False
     cfg.transforms.Cutout = edict()
     cfg.transforms.Cutout.num_holes = 0
+    cfg.transforms.mean = [0.485, 0.456, 0.406]
+    cfg.transforms.std = [0.229, 0.224, 0.225]
 
     # val
     cfg.val = edict()
