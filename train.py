@@ -58,7 +58,7 @@ if __name__ == "__main__":
                 df,
                 train_images_path,
                 phase=phase,
-                size=(64, 64),
+                size=(config.img_size, config.img_size),
                 batch_size=config.train.batch_size,
                 num_workers=config.num_workers,
                 transforms=transforms,
