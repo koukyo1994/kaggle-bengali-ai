@@ -7,8 +7,15 @@ def _get_default():
 
     # dataset
     cfg.dataset = edict()
-    cfg.dataset.affine = False
-    cfg.dataset.morphology = False
+    cfg.dataset.train = edict()
+    cfg.dataset.val = edict()
+    cfg.dataset.test = edict()
+    cfg.dataset.train.affine = False
+    cfg.dataset.train.morphology = False
+    cfg.dataset.val.affine = False
+    cfg.dataset.val.morphology = False
+    cfg.dataset.test.affine = False
+    cfg.dataset.test.morphology = False
 
     # dataset
     cfg.data = edict()

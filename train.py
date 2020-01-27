@@ -7,7 +7,7 @@ from pathlib import Path
 
 from catalyst.dl import SupervisedRunner
 
-from src.callbacks import MacroAverageRecall
+from src.callbacks import MacroAverageRecall, SaveWeightsCallback
 from src.dataset import get_loader
 from src.losses import get_loss
 from src.models import BengaliClassifier
@@ -63,8 +63,10 @@ if __name__ == "__main__":
                 num_workers=config.num_workers,
                 transforms=transforms,
                 cls_levels=cls_levels,
-                affine=config.dataset.affine,
-                morphology=config.dataset.morphology,
+                affine=config.dataset.train.affine
+                if phase == "train" else config.dataset.val.affine,
+                morphology=config.dataset.train.morphology
+                if phase == "train" else config.dataset.val.morphology,
                 onehot=True if config.loss.name == "bce" else False)
             for phase, df in zip(["train", "valid"], [trn_df, val_df])
         }
@@ -72,6 +74,16 @@ if __name__ == "__main__":
         criterion = get_loss(config)
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
+        callbacks = [
+            MacroAverageRecall(
+                n_grapheme=cls_levels["grapheme"],
+                n_vowel=cls_levels["vowel"],
+                n_consonant=cls_levels["consonant"],
+                loss_type=config.loss.name),
+            SaveWeightsCallback(
+                to=Path(config.checkpoints
+                        ) if config.checkpoints is not None else None)
+        ]
 
         runner = SupervisedRunner(
             device=ct.utils.get_device(),
@@ -86,7 +98,7 @@ if __name__ == "__main__":
             logdir=output_dir,
             scheduler=scheduler,
             num_epochs=config.train.num_epochs,
-            callbacks=[MacroAverageRecall()],
+            callbacks=callbacks,
             main_metric="mar",
             minimize_metric=False,
             monitoring_params=None,

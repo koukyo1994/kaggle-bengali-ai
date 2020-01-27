@@ -1,6 +1,9 @@
 import numpy as np
 import torch
 
+from pathlib import Path
+from typing import Optional
+
 from catalyst.dl.core import Callback, CallbackOrder, RunnerState
 from sklearn.metrics import recall_score
 
@@ -10,6 +13,7 @@ class MacroAverageRecall(Callback):
                  n_grapheme=168,
                  n_vowel=11,
                  n_consonant=7,
+                 loss_type: str = "bce",
                  prefix: str = "mar",
                  output_key: str = "logits",
                  target_key: str = "targets"):
@@ -19,6 +23,7 @@ class MacroAverageRecall(Callback):
         self.n_grapheme = n_grapheme
         self.n_vowel = n_vowel
         self.n_consonant = n_consonant
+        self.loss_type = loss_type
         super().__init__(CallbackOrder.Metric)
 
     def on_batch_end(self, state: RunnerState):
@@ -28,20 +33,31 @@ class MacroAverageRecall(Callback):
         tail = self.n_grapheme
         grapheme = torch.sigmoid(out[:, head:tail])
         grapheme_np = torch.argmax(grapheme, dim=1).detach().cpu().numpy()
-        grapheme_target = torch.argmax(targ[:, head:tail], dim=1).cpu().numpy()
+        if self.loss_type == "bce":
+            grapheme_target = torch.argmax(
+                targ[:, head:tail], dim=1).cpu().numpy()
+        else:
+            grapheme_target = targ[:, 0].cpu().numpy()
 
         head = tail
         tail = head + self.n_vowel
         vowel = torch.sigmoid(out[:, head:tail])
         vowel_np = torch.argmax(vowel, dim=1).detach().cpu().numpy()
-        vowel_target = torch.argmax(targ[:, head:tail], dim=1).cpu().numpy()
+        if self.loss_type == "bce":
+            vowel_target = torch.argmax(
+                targ[:, head:tail], dim=1).cpu().numpy()
+        else:
+            vowel_target = targ[:, 1].cpu().numpy()
 
         head = tail
         tail = head + self.n_consonant
         consonant = torch.sigmoid(out[:, head:tail])
         consonant_np = torch.argmax(consonant, dim=1).detach().cpu().numpy()
-        consonant_target = torch.argmax(
-            targ[:, head:tail], dim=1).cpu().numpy()
+        if self.loss_type == "bce":
+            consonant_target = torch.argmax(
+                targ[:, head:tail], dim=1).cpu().numpy()
+        else:
+            consonant_target = targ[:, 2].cpu().numpy()
 
         scores = []
         scores.append(
@@ -59,3 +75,17 @@ class MacroAverageRecall(Callback):
                 zero_division=0))
         final_score = np.average(scores, weights=[2, 1, 1])
         state.metrics.add_batch_value(name=self.prefix, value=final_score)
+
+
+class SaveWeightsCallback(Callback):
+    def __init__(self, to: Optional[Path] = None):
+        self.to = to
+        super().__init__(CallbackOrder.External)
+
+    def on_epoch_end(self, state: RunnerState):
+        weights = state.model.state_dict()
+        logdir = state.logdir / "checkpoints"
+        torch.save(weights, logdir / "temp.pth")
+
+        if self.to is not None:
+            torch.save(weights, self.to / "temp.pth")

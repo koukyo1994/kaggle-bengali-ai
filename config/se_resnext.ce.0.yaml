@@ -28,7 +28,7 @@ test:
   batch_size: 32
 
 loss:
-  name: bce
+  name: cross_entropy
   params:
     n_grapheme: 168
     n_vowel: 11

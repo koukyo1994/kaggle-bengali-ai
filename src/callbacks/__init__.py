@@ -1,1 +1,1 @@
-from .factory import MacroAverageRecall
+from .factory import MacroAverageRecall, SaveWeightsCallback
