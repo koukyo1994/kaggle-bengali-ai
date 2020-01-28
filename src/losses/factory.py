@@ -4,12 +4,17 @@ from easydict import EasyDict as edict
 
 
 class BengaliCrossEntropyLoss(nn.Module):
-    def __init__(self, n_grapheme: int, n_vowel: int, n_consonant: int):
+    def __init__(self,
+                 n_grapheme: int,
+                 n_vowel: int,
+                 n_consonant: int,
+                 weights=(1.0, 1.0, 1.0)):
         super().__init__()
         self.n_grapheme = n_grapheme
         self.n_vowel = n_vowel
         self.n_consonant = n_consonant
         self.cross_entropy = nn.CrossEntropyLoss()
+        self.weights = weights
 
     def forward(self, pred, true):
         head = 0
@@ -27,9 +32,11 @@ class BengaliCrossEntropyLoss(nn.Module):
         consonant_pred = pred[:, head:tail]
         consonant_true = true[:, 2]
 
-        return self.cross_entropy(grapheme_pred, grapheme_true) + \
-            self.cross_entropy(vowel_pred, vowel_true) + \
-            self.cross_entropy(consonant_pred, consonant_true)
+        return self.weights[0] * self.cross_entropy(
+            grapheme_pred, grapheme_true) + \
+            self.weights[1] * self.cross_entropy(vowel_pred, vowel_true) + \
+            self.weights[2] * self.cross_entropy(
+                consonant_pred, consonant_true)
 
 
 class BengaliBCELoss(nn.Module):

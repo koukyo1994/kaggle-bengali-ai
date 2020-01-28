@@ -1,0 +1,64 @@
+dataset:
+  train:
+    affine: True
+    morphology: False
+  val:
+    affine: False
+    morphology: False
+  test:
+    affine: False
+    morphology: False
+
+data:
+  train_df_path: input/bengaliai-cv19/train.csv
+  train_images_path: input/bengaliai-cv19/train_images
+  test_images_path: input/bengaliai-cv19/test_images
+  sample_submission_path: input/bengaliai-cv19/sample_submission.csv
+
+model:
+  model_name: se_resnext50_32x4d
+  pretrained: imagenet
+  num_classes: 186
+
+train:
+  batch_size: 32
+  num_epochs: 50
+
+test:
+  batch_size: 32
+
+loss:
+  name: cross_entropy
+  params:
+    n_grapheme: 168
+    n_vowel: 11
+    n_consonant: 7
+
+optimizer:
+  name: Adam
+  params:
+    lr: 0.001
+
+scheduler:
+  name: cosine
+  params:
+    T_max: 10
+    eta_min: 0.00001
+
+transforms:
+  Noise: True
+  Contrast: True
+  Cutout:
+    num_holes: 0
+
+val:
+  name: kfold
+  params:
+    random_state: 42
+    n_splits: 5
+
+log_dir: log/
+num_workers: 2
+seed: 1213
+img_size: 64
+checkpoints:
