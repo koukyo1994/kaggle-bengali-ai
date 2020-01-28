@@ -6,11 +6,12 @@ import pandas as pd
 from pathlib import Path
 
 from catalyst.dl import SupervisedRunner
+from catalyst.dl.callbacks import MixupCallback
 
 from src.callbacks import MacroAverageRecall, SaveWeightsCallback
-from src.dataset import get_loader
+from src.dataset import get_base_loader
 from src.losses import get_loss
-from src.models import BengaliClassifier
+from src.models import get_model
 from src.optimizers import get_optimizer
 from src.schedulers import get_scheduler
 from src.transforms import get_transforms
@@ -54,23 +55,17 @@ if __name__ == "__main__":
         trn_df = df.loc[trn_idx, :].reset_index(drop=True)
         val_df = df.loc[val_idx, :].reset_index(drop=True)
         data_loaders = {
-            phase: get_loader(
+            phase: get_base_loader(
                 df,
                 train_images_path,
                 phase=phase,
                 size=(config.img_size, config.img_size),
                 batch_size=config.train.batch_size,
                 num_workers=config.num_workers,
-                transforms=transforms,
-                cls_levels=cls_levels,
-                affine=config.dataset.train.affine
-                if phase == "train" else config.dataset.val.affine,
-                morphology=config.dataset.train.morphology
-                if phase == "train" else config.dataset.val.morphology,
-                onehot=True if config.loss.name == "bce" else False)
+                transforms=transforms)
             for phase, df in zip(["train", "valid"], [trn_df, val_df])
         }
-        model = BengaliClassifier(**config.model)
+        model = get_model(config)
         criterion = get_loss(config)
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
@@ -84,6 +79,10 @@ if __name__ == "__main__":
                 to=Path(config.checkpoints
                         ) if config.checkpoints is not None else None)
         ]
+        if config.mixup:
+            callbacks.append(MixupCallback(fields=[
+                "images",
+            ]))
 
         runner = SupervisedRunner(
             device=ct.utils.get_device(),

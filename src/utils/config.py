@@ -22,6 +22,11 @@ def _get_default():
 
     # model
     cfg.model = edict()
+    cfg.model.model_name = "resnet18"
+    cfg.model.num_classes = 186
+    cfg.model.pretrained = True
+    cfg.model.head = "linear"
+    cfg.model.in_channels = 3
 
     # train
     cfg.train = edict()
@@ -47,6 +52,8 @@ def _get_default():
     cfg.transforms.VerticalFlip = False
     cfg.transforms.Noise = False
     cfg.transforms.Contrast = False
+    cfg.transforms.Rotate = False
+    cfg.transforms.RandomScale = False
     cfg.transforms.Cutout = edict()
     cfg.transforms.Cutout.num_holes = 0
     cfg.transforms.mean = [0.485, 0.456, 0.406]

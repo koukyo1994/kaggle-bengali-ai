@@ -7,7 +7,40 @@ from pathlib import Path
 from typing import Tuple, Dict
 
 from .utils import (crop_and_embed, normalize, affine_image,
-                    random_erosion_or_dilation, to_image)
+                    random_erosion_or_dilation, to_image, crop_resize)
+
+
+class BaseDataset(torchdata.Dataset):
+    def __init__(self, image_dir: Path, df: pd.DataFrame, transforms,
+                 size: Tuple[int, int]):
+        self.df = df
+        self.image_dir = image_dir
+        self.transforms = transforms
+        self.size = size
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, idx):
+        image_id = self.df.loc[idx, "image_id"]
+        image_path = self.image_dir / f"{image_id}.png"
+
+        image = cv2.imread(str(image_path))
+        # image = crop_resize(image[:, :, 0], self.size)
+        # image = np.moveaxis(np.stack([image, image, image]), 0, -1)
+        if self.transforms is not None:
+            image = self.transforms(image=image)["image"]
+        image = cv2.resize(image, self.size)
+        if image.shape[2] == 3:
+            image = np.moveaxis(image, -1, 0)
+        grapheme = self.df.loc[idx, "grapheme_root"]
+        vowel = self.df.loc[idx, "vowel_diacritic"]
+        consonant = self.df.loc[idx, "consonant_diacritic"]
+        label = np.zeros(3, dtype=int)
+        label[0] = grapheme
+        label[1] = vowel
+        label[2] = consonant
+        return {"images": image, "targets": label}
 
 
 class TrainDataset(torchdata.Dataset):
@@ -105,6 +138,32 @@ class TestDataset(torchdata.Dataset):
         if image.shape[2] == 3:
             image = np.moveaxis(image, -1, 0)
         return image
+
+
+def get_base_loader(df: pd.DataFrame,
+                    image_dir: Path,
+                    phase: str = "train",
+                    size: Tuple[int, int] = (128, 128),
+                    batch_size=256,
+                    num_workers=2,
+                    transforms=None):
+    assert phase in ["train", "valid"]
+    if phase == "train":
+        is_shuffle = True
+        drop_last = True
+    else:
+        is_shuffle = False
+        drop_last = False
+
+    dataset = BaseDataset(  # type: ignore
+        image_dir, df, transforms, size)
+    return torchdata.DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=is_shuffle,
+        num_workers=num_workers,
+        pin_memory=True,
+        drop_last=drop_last)
 
 
 def get_loader(df: pd.DataFrame,

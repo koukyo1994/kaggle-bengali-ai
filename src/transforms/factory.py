@@ -9,6 +9,10 @@ def get_transforms(config: edict):
         list_transforms.append(A.HorizontalFrip())
     if config.transforms.VerticalFlip:
         list_transforms.append(A.VerticalFlip())
+    if config.transforms.Rotate:
+        list_transforms.append(A.Rotate(limit=15))
+    if config.transforms.RandomScale:
+        list_transforms.append(A.RandomScale())
     if config.transforms.Noise:
         list_transforms.append(
             A.OneOf(
