@@ -2,7 +2,7 @@ import numpy as np
 import torch
 
 from catalyst.dl.core import Callback, CallbackOrder, RunnerState
-from sklearn.metrics import recall_score
+from sklearn.metrics import recall_score, confusion_matrix
 
 
 class MacroAverageRecall(Callback):
@@ -94,8 +94,7 @@ class AverageRecall(Callback):
         super().__init__(CallbackOrder.Metric)
 
     def on_epoch_start(self, state: RunnerState):
-        self.x = torch.arange(0, self.n_classes)
-        self.cm = torch.zeros((self.n_classes, self.n_classes))
+        self.cm = np.zeros((self.n_classes, self.n_classes))
 
     def on_batch_end(self, state: RunnerState):
         targ = state.input[self.target_key].detach()
@@ -112,8 +111,8 @@ class AverageRecall(Callback):
             pred_np = pred.numpy()
             target = targ[:, self.index].cpu()
             target_np = target.numpy()
-        cm = ((pred == self.x[:, None]) & (target == self.x[:, None, None])) \
-            .sum(dim=2, dtype=torch.float32)
+        cm = confusion_matrix(
+            y_true=target_np, y_pred=pred_np, labels=np.arange(self.n_classes))
         self.cm += cm
         score = recall_score(
             target_np, pred_np, average="macro", zero_division=0)
@@ -124,8 +123,8 @@ class AverageRecall(Callback):
             self.recall = recall
 
     def _recall(self):
-        rec = torch.diag(self.cm) / (self.cm.sum(dim=1) + 1e-9).numpy().values
-        return rec.mean().numpy()
+        rec = np.diag(self.cm) / (self.cm.sum(axis=1) + 1e-9)
+        return rec.mean()
 
 
 class TotalAverageRecall(Callback):
