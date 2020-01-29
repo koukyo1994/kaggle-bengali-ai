@@ -3,28 +3,35 @@ import albumentations as A
 from easydict import EasyDict as edict
 
 
-def get_transforms(config: edict):
+def get_transforms(config: edict, phase: str = "train"):
+    assert phase in ["train", "valid", "test"]
+    if phase == "train":
+        cfg = config.transforms.train
+    elif phase == "valid":
+        cfg = config.transforms.val
+    elif phase == "test":
+        cfg = config.transforms.test
     list_transforms = []
-    if config.transforms.HorizontalFlip:
+    if cfg.HorizontalFlip:
         list_transforms.append(A.HorizontalFrip())
-    if config.transforms.VerticalFlip:
+    if cfg.VerticalFlip:
         list_transforms.append(A.VerticalFlip())
-    if config.transforms.Rotate:
+    if cfg.Rotate:
         list_transforms.append(A.Rotate(limit=15))
-    if config.transforms.RandomScale:
+    if cfg.RandomScale:
         list_transforms.append(A.RandomScale())
-    if config.transforms.Noise:
+    if cfg.Noise:
         list_transforms.append(
             A.OneOf(
                 [A.GaussNoise(), A.IAAAdditiveGaussianNoise()], p=0.5))
-    if config.transforms.Contrast:
+    if cfg.Contrast:
         list_transforms.append(
             A.OneOf(
                 [A.RandomContrast(0.5),
                  A.RandomGamma(),
                  A.RandomBrightness()],
                 p=0.5))
-    if config.transforms.Cutout.num_holes > 0:
+    if cfg.Cutout.num_holes > 0:
         list_transforms.append(A.Cutout(**config.Cutout))
 
     list_transforms.append(

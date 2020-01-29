@@ -48,20 +48,41 @@ def _get_default():
 
     # transforms:
     cfg.transforms = edict()
-    cfg.transforms.HorizontalFlip = False
-    cfg.transforms.VerticalFlip = False
-    cfg.transforms.Noise = False
-    cfg.transforms.Contrast = False
-    cfg.transforms.Rotate = False
-    cfg.transforms.RandomScale = False
-    cfg.transforms.Cutout = edict()
-    cfg.transforms.Cutout.num_holes = 0
+    cfg.transforms.train = edict()
+    cfg.transforms.train.HorizontalFlip = False
+    cfg.transforms.train.VerticalFlip = False
+    cfg.transforms.train.Noise = False
+    cfg.transforms.train.Contrast = False
+    cfg.transforms.train.Rotate = False
+    cfg.transforms.train.RandomScale = False
+    cfg.transforms.train.Cutout = edict()
+    cfg.transforms.train.Cutout.num_holes = 0
+    cfg.transforms.val = edict()
+    cfg.transforms.val.HorizontalFlip = False
+    cfg.transforms.val.VerticalFlip = False
+    cfg.transforms.val.Noise = False
+    cfg.transforms.val.Contrast = False
+    cfg.transforms.val.Rotate = False
+    cfg.transforms.val.RandomScale = False
+    cfg.transforms.val.Cutout = edict()
+    cfg.transforms.val.Cutout.num_holes = 0
+    cfg.transforms.test = edict()
+    cfg.transforms.test.HorizontalFlip = False
+    cfg.transforms.test.VerticalFlip = False
+    cfg.transforms.test.Noise = False
+    cfg.transforms.test.Contrast = False
+    cfg.transforms.test.Rotate = False
+    cfg.transforms.test.RandomScale = False
+    cfg.transforms.test.Cutout = edict()
+    cfg.transforms.test.Cutout.num_holes = 0
     cfg.transforms.mean = [0.485, 0.456, 0.406]
     cfg.transforms.std = [0.229, 0.224, 0.225]
 
     # val
     cfg.val = edict()
     cfg.val.params = edict()
+
+    cfg.callbacks = []
 
     return cfg
 

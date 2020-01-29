@@ -8,7 +8,7 @@ from pathlib import Path
 from catalyst.dl import SupervisedRunner
 from catalyst.dl.callbacks import MixupCallback
 
-from src.callbacks import MacroAverageRecall, SaveWeightsCallback
+from src.callbacks import get_callbacks
 from src.dataset import get_base_loader
 from src.losses import get_loss
 from src.models import get_model
@@ -38,7 +38,10 @@ if __name__ == "__main__":
     df = pd.read_csv(config.data.train_df_path)
     splits = get_validation(df, config)
 
-    transforms = get_transforms(config)
+    transforms_dict = {
+        phase: get_transforms(config, phase)
+        for phase in ["train", "valid"]
+    }
 
     cls_levels = {
         "grapheme": df.grapheme_root.nunique(),
@@ -62,23 +65,14 @@ if __name__ == "__main__":
                 size=(config.img_size, config.img_size),
                 batch_size=config.train.batch_size,
                 num_workers=config.num_workers,
-                transforms=transforms)
+                transforms=transforms_dict[phase])
             for phase, df in zip(["train", "valid"], [trn_df, val_df])
         }
         model = get_model(config)
         criterion = get_loss(config)
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
-        callbacks = [
-            MacroAverageRecall(
-                n_grapheme=cls_levels["grapheme"],
-                n_vowel=cls_levels["vowel"],
-                n_consonant=cls_levels["consonant"],
-                loss_type=config.loss.name),
-            SaveWeightsCallback(
-                to=Path(config.checkpoints
-                        ) if config.checkpoints is not None else None)
-        ]
+        callbacks = get_callbacks(config)
         if config.mixup:
             callbacks.append(MixupCallback(fields=[
                 "images",
