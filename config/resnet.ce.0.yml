@@ -16,7 +16,7 @@ data:
   sample_submission_path: input/bengaliai-cv19/sample_submission.csv
 
 model:
-  model_name: resnet18
+  model_name: resnet34
   pretrained: True
   num_classes: 186
   head: custom
