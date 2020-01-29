@@ -118,13 +118,14 @@ class AverageRecall(Callback):
         score = recall_score(
             target_np, pred_np, average="macro", zero_division=0)
         state.metrics.add_batch_value(name="batch_" + self.prefix, value=score)
+        if (state.step / state.batch_size + 1.0) > state.loader_len:
+            recall = self._recall()
+            state.metrics.add_batch_value(name=self.prefix, value=recall)
+            self.recall = recall
 
     def _recall(self):
         rec = torch.diag(self.cm) / (self.cm.sum(dim=1) + 1e-9).numpy().values
-        return rec
-
-    def on_loader_end(self, state: RunnerState):
-        self.recall = self._recall()
+        return rec.mean().numpy()
 
 
 class TotalAverageRecall(Callback):
@@ -168,18 +169,15 @@ class TotalAverageRecall(Callback):
         self.vowel_callback.on_epoch_start(state)
         self.consonant_callback.on_epoch_start(state)
 
-    def on_batch_end(self, state):
+    def on_batch_end(self, state: RunnerState):
         self.grapheme_callback.on_batch_end(state)
         self.vowel_callback.on_batch_end(state)
         self.consonant_callback.on_batch_end(state)
-
-    def on_loader_end(self, state: RunnerState):
-        self.grapheme_callback.on_loader_end(state)
-        self.vowel_callback.on_loader_end(state)
-        self.consonant_callback.on_loader_end(state)
-        final_score = np.average([
-            self.grapheme_callback.recall, self.vowel_callback.recall,
-            self.consonant_callback.recall
-        ],
-                                 weights=[2, 1, 1])
-        state.metrics.add_batch_value(name=self.prefix, value=final_score)
+        if (state.step / state.batch_size + 1.0) > state.loader_len:
+            grapheme_recall = self.grapheme_callback.recall
+            vowel_recall = self.vowel_callback.recall
+            consonant_recall = self.consonant_callback.recall
+            final_score = np.average(
+                [grapheme_recall, vowel_recall, consonant_recall],
+                weights=[2, 1, 1])
+            state.metrics.add_batch_value(name=self.prefix, value=final_score)

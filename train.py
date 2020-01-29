@@ -92,7 +92,8 @@ if __name__ == "__main__":
             scheduler=scheduler,
             num_epochs=config.train.num_epochs,
             callbacks=callbacks,
-            main_metric="mar",
+            main_metric="tar",
+            state_kwargs={"batch_consistant_metrics": False},
             minimize_metric=False,
             monitoring_params=None,
             verbose=True)
