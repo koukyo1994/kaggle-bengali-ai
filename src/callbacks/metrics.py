@@ -116,11 +116,11 @@ class AverageRecall(Callback):
             .sum(dim=2, dtype=torch.float32)
         self.cm += cm
         score = recall_score(
-            target_np, pred_np, average="macro", zero_devision=0)
+            target_np, pred_np, average="macro", zero_division=0)
         state.metrics.add_batch_value(name="batch_" + self.prefix, value=score)
 
     def _recall(self):
-        rec = torch.diag(self.cm) / (self.cm.sum(dim=1) + 1e-9)
+        rec = torch.diag(self.cm) / (self.cm.sum(dim=1) + 1e-9).numpy().values
         return rec
 
     def on_loader_end(self, state: RunnerState):
