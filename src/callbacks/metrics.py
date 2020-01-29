@@ -115,14 +115,15 @@ class AverageRecall(Callback):
         cm = ((pred == self.x[:, None]) & (target == self.x[:, None, None])) \
             .sum(dim=2, dtype=torch.float32)
         self.cm += cm
-        score = recall_score(target_np, pred_np, average="macro")
+        score = recall_score(
+            target_np, pred_np, average="macro", zero_devision=0)
         state.metrics.add_batch_value(name="batch_" + self.prefix, value=score)
 
     def _recall(self):
         rec = torch.diag(self.cm) / (self.cm.sum(dim=1) + 1e-9)
         return rec
 
-    def on_epoch_end(self, state: RunnerState):
+    def on_loader_end(self, state: RunnerState):
         self.recall = self._recall()
 
 
@@ -172,10 +173,10 @@ class TotalAverageRecall(Callback):
         self.vowel_callback.on_batch_end(state)
         self.consonant_callback.on_batch_end(state)
 
-    def on_epoch_end(self, state: RunnerState):
-        self.grapheme_callback.on_epoch_end(state)
-        self.vowel_callback.on_epoch_end(state)
-        self.consonant_callback.on_epoch_end(state)
+    def on_loader_end(self, state: RunnerState):
+        self.grapheme_callback.on_loader_end(state)
+        self.vowel_callback.on_loader_end(state)
+        self.consonant_callback.on_loader_end(state)
         final_score = np.average([
             self.grapheme_callback.recall, self.vowel_callback.recall,
             self.consonant_callback.recall
