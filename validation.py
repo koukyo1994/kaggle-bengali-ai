@@ -44,7 +44,7 @@ if __name__ == "__main__":
         with open(result_path, "r") as f:
             result = edict(json.load(f))
     else:
-        result = config.copy()
+        result = edict(config.copy())
         result.eval_result = edict()
 
     if len(args.folds) == 0:

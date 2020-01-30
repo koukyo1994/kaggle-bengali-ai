@@ -1,8 +1,10 @@
 import numpy as np
 import torch
 
+from typing import List
+
 from catalyst.dl.core import Callback, CallbackOrder, RunnerState
-from sklearn.metrics import recall_score, confusion_matrix
+from sklearn.metrics import recall_score
 
 
 class MacroAverageRecall(Callback):
@@ -93,38 +95,42 @@ class AverageRecall(Callback):
         self.recall = 0.0
         super().__init__(CallbackOrder.Metric)
 
-    def on_epoch_start(self, state: RunnerState):
-        self.cm = np.zeros((self.n_classes, self.n_classes))
+    def on_loader_start(self, state: RunnerState):
+        self.prediction: List[int] = []
+        self.target: List[int] = []
+        self.batch_count = 0
 
     def on_batch_end(self, state: RunnerState):
+        self.batch_count += 1
+
         targ = state.input[self.target_key].detach()
         out = state.output[self.output_key].detach()
         head = self.offset
         tail = self.offset + self.n_classes
         if self.loss_type == "bce":
-            pred = torch.argmax(torch.sigmoid(out[:, head:tail]), dim=1).cpu()
-            pred_np = pred.numpy()
-            target = torch.argmax(targ[:, head:tail], dim=1).cpu()
-            target_np = target.numpy()
+            pred_np = torch.argmax(
+                torch.sigmoid(out[:, head:tail]), dim=1).cpu().numpy()
+            target_np = torch.argmax(targ[:, head:tail], dim=1).cpu().numpy()
         else:
-            pred = torch.argmax(out[:, head:tail], dim=1).cpu()
-            pred_np = pred.numpy()
-            target = targ[:, self.index].cpu()
-            target_np = target.numpy()
-        cm = confusion_matrix(
-            y_true=target_np, y_pred=pred_np, labels=np.arange(self.n_classes))
-        self.cm += cm
+            pred_np = torch.argmax(out[:, head:tail], dim=1).cpu().numpy()
+            target_np = targ[:, self.index].cpu().numpy()
+        self.prediction.extend(pred_np)
+        self.target.extend(target_np)
         score = recall_score(
             target_np, pred_np, average="macro", zero_division=0)
         state.metrics.add_batch_value(name="batch_" + self.prefix, value=score)
-        if (state.step / state.batch_size + 1.0) > state.loader_len:
+        if self.batch_count == state.loader_len:
             recall = self._recall()
             state.metrics.add_batch_value(name=self.prefix, value=recall)
             self.recall = recall
 
     def _recall(self):
-        rec = np.diag(self.cm) / (self.cm.sum(axis=1) + 1e-9)
-        return rec.mean()
+        rec = recall_score(
+            y_true=self.target,
+            y_pred=self.prediction,
+            average="macro",
+            zero_division=0)
+        return rec
 
 
 class TotalAverageRecall(Callback):
@@ -163,16 +169,18 @@ class TotalAverageRecall(Callback):
             target_key=target_key)
         super().__init__(CallbackOrder.Metric)
 
-    def on_epoch_start(self, state):
-        self.grapheme_callback.on_epoch_start(state)
-        self.vowel_callback.on_epoch_start(state)
-        self.consonant_callback.on_epoch_start(state)
+    def on_loader_start(self, state):
+        self.grapheme_callback.on_loader_start(state)
+        self.vowel_callback.on_loader_start(state)
+        self.consonant_callback.on_loader_start(state)
+        self.batch_count = 0
 
     def on_batch_end(self, state: RunnerState):
+        self.batch_count += 1
         self.grapheme_callback.on_batch_end(state)
         self.vowel_callback.on_batch_end(state)
         self.consonant_callback.on_batch_end(state)
-        if (state.step / state.batch_size + 1.0) > state.loader_len:
+        if self.batch_count == state.loader_len:
             grapheme_recall = self.grapheme_callback.recall
             vowel_recall = self.vowel_callback.recall
             consonant_recall = self.consonant_callback.recall

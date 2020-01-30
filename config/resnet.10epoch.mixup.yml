@@ -101,5 +101,5 @@ callbacks:
 log_dir: log/
 num_workers: 2
 seed: 1213
-img_size: 64
-mixup: False
+img_size: 128
+mixup: True
