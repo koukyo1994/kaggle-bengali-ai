@@ -23,8 +23,8 @@ def inference_loop(model: nn.Module,
     prediction = np.zeros((dataset_length, 3), dtype=np.uint8)
     if requires_soft:
         soft_prediction = np.zeros(
-            (dataset_length, n_grapheme + n_vowel, n_consonant),
-            dtype=np.uint8)
+            (dataset_length, n_grapheme + n_vowel + n_consonant),
+            dtype=np.float32)
 
     batch_size = loader.batch_size
     device = get_device()
