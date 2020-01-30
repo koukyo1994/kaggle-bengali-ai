@@ -134,6 +134,7 @@ dmypy.json
 *.png
 *.zip
 *.pth
+*.npy
 
 # editor
 .vscode

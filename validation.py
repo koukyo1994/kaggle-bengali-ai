@@ -1,4 +1,5 @@
 import argparse
+import json
 
 import numpy as np
 import pandas as pd
@@ -38,12 +39,24 @@ if __name__ == "__main__":
         "consonant": df.consonant_diacritic.nunique()
     }
 
+    result_path = output_base_dir / "result.json"
+    if result_path.exists():
+        with open(result_path, "r") as f:
+            result = edict(json.load(f))
+    else:
+        result = config.copy()
+        result.eval_result = edict()
+
     if len(args.folds) == 0:
         folds = [0]
     else:
         folds = args.folds
 
-    oof_preds = np.zeros((len(df), 3))
+    oof_path = output_base_dir / "oof_preds.npy"
+    if oof_path.exists():
+        oof_preds = np.load(oof_path)
+    else:
+        oof_preds = np.zeros((len(df), 3))
 
     for i in folds:
         print(f"Fold: {i}")
@@ -68,10 +81,13 @@ if __name__ == "__main__":
         score = macro_average_recall(prediction["prediction"], val_df)
         oof_preds[val_idx, :] = prediction["prediction"]
 
-        config.eval_result = edict()
-        config.eval_result[f"fold{i}"] = edict()
-        config.eval_result[f"fold{i}"].score = score
-        config.eval_result[f"fold{i}"].loss = prediction["loss"]
+        result.eval_result[f"fold{i}"] = edict()
+        result.eval_result[f"fold{i}"].score = score
+        result.eval_result[f"fold{i}"].loss = prediction["loss"]
 
-    save_json(config, output_base_dir / "result.json")
-    np.save(output_base_dir / "oof_preds.npy", oof_preds)
+    if len(result.eval_result) == config.val.params.n_splits:
+        overall_score = macro_average_recall(oof_preds, df)
+        result.eval_result["overall"] = edict()
+        result.eval_result["overall"].score = score
+    save_json(result, result_path)
+    np.save(oof_path, oof_preds)

@@ -43,6 +43,28 @@ class BaseDataset(torchdata.Dataset):
         return {"images": image, "targets": label}
 
 
+class BaseTestDataset(torchdata.Dataset):
+    def __init__(self, df: pd.DataFrame, transforms, size: Tuple[int, int]):
+        self.images = df.iloc[:, 1:].values.reshape(-1, 137, 236)
+        self.size = size
+        self.transforms = transforms
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, idx):
+        image = self.images[idx]
+        if image.ndim == 2:
+            image = np.moveaxis(np.stack([image, image, image]), 0, -1)
+        image = cv2.resize(image, self.size)
+        if self.transforms is not None:
+            image = self.transforms(image=image)["image"]
+        image = cv2.resize(image, self.size)
+        if image.shape[2] == 3:
+            image = np.moveaxis(image, -1, 0)
+        return image
+
+
 class TrainDataset(torchdata.Dataset):
     def __init__(self,
                  image_dir: Path,
@@ -138,6 +160,20 @@ class TestDataset(torchdata.Dataset):
         if image.shape[2] == 3:
             image = np.moveaxis(image, -1, 0)
         return image
+
+
+def get_base_test_loader(df: pd.DataFrame,
+                         size: Tuple[int, int] = (128, 128),
+                         batch_size=256,
+                         num_workers=2,
+                         transforms=None):
+    dataset = BaseTestDataset(df, transforms, size)
+    return torchdata.DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers,
+        drop_last=False)
 
 
 def get_base_loader(df: pd.DataFrame,
