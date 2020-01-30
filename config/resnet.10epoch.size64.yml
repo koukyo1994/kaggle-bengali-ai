@@ -1,0 +1,105 @@
+dataset:
+  train:
+    affine: True
+    morphology: False
+  val:
+    affine: False
+    morphology: False
+  test:
+    affine: False
+    morphology: False
+
+data:
+  train_df_path: input/bengaliai-cv19/train.csv
+  train_images_path: input/bengaliai-cv19/train_images
+  test_images_path: input/bengaliai-cv19/test_images
+  sample_submission_path: input/bengaliai-cv19/sample_submission.csv
+
+model:
+  model_name: resnet34
+  pretrained: True
+  num_classes: 186
+  head: custom
+  in_channels: 3
+
+train:
+  batch_size: 128
+  num_epochs: 10
+
+test:
+  batch_size: 128
+
+loss:
+  name: cross_entropy
+  params:
+    n_grapheme: 168
+    n_vowel: 11
+    n_consonant: 7
+
+optimizer:
+  name: Adam
+  params:
+    lr: 0.0001
+
+scheduler:
+  name: cosine
+  params:
+    T_max: 10
+
+transforms:
+  train:
+    Noise: False
+    Contrast: False
+    Rotate: True
+    RandomScale: True
+    Cutout:
+      num_holes: 0
+  val:
+    Noise: False
+    Contrast: False
+    Rotate: False
+    RandomScale: False
+    Cutout:
+      num_holes: 0
+  test:
+    Noise: False
+    Contrast: False
+    Rotate: False
+    RandomScale: False
+    Cutout:
+      num_holes: 0
+
+val:
+  name: kfold
+  params:
+    random_state: 42
+    n_splits: 5
+
+callbacks:
+  - AverageRecall:
+      index: 0
+      offset: 0
+      n_classes: 168
+      prefix: grapheme_recall
+      loss_type: cross_entroy
+  - AverageRecall:
+      index: 1
+      offset: 168
+      n_classes: 11
+      prefix: vowel_recall
+      loss_type: cross_entropy
+  - AverageRecall:
+      index: 2
+      offset: 179
+      n_classes: 7
+      prefix: consonant_recall
+      loss_type: cross_entropy
+  - TotalAverageRecall:
+      loss_type: cross_entropy
+  - SaveWeightsCallback:
+
+log_dir: log/
+num_workers: 2
+seed: 1213
+img_size: 64
+mixup: False
