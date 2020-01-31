@@ -36,6 +36,9 @@ def get_transforms(config: edict, phase: str = "train"):
 
     list_transforms.append(
         A.Normalize(
-            mean=config.transforms.mean, std=config.transforms.std, p=1))
+            mean=config.transforms.mean,
+            std=config.transforms.std,
+            p=1,
+            always_apply=True))
 
     return A.Compose(list_transforms, p=1.0)
