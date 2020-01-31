@@ -26,10 +26,18 @@ class BaseDataset(torchdata.Dataset):
         image_path = self.image_dir / f"{image_id}.png"
 
         image = cv2.imread(str(image_path))
-        # image = crop_resize(image[:, :, 0], self.size)
-        # image = np.moveaxis(np.stack([image, image, image]), 0, -1)
+        longer_side = image.shape[1]
+        if image.ndim == 2:
+            new_image = np.ones(
+                (longer_side, longer_side), dtype=np.uint8) * 255
+        else:
+            new_image = np.ones(
+                (longer_side, longer_side, 3), dtype=np.uint8) * 255
+        offset = np.random.randint(0, longer_side - image.shape[0])
+        new_image[offset:offset + image.shape[1], :] = image
+
         if self.transforms is not None:
-            image = self.transforms(image=image)["image"]
+            image = self.transforms(image=new_image)["image"]
         image = cv2.resize(image, self.size)
         if image.shape[2] == 3:
             image = np.moveaxis(image, -1, 0)
@@ -56,9 +64,12 @@ class BaseTestDataset(torchdata.Dataset):
         image = self.images[idx]
         if image.ndim == 2:
             image = np.moveaxis(np.stack([image, image, image]), 0, -1)
-        image = cv2.resize(image, self.size)
+        longer_side = image.shape[1]
+        new_image = np.ones((longer_side, longer_side), dtype=np.uint8) * 255
+        offset = np.random.randint(0, longer_side - image.shape[0])
+        new_image[offset:offset + image.shape[1], :] = image
         if self.transforms is not None:
-            image = self.transforms(image=image)["image"]
+            image = self.transforms(image=new_image)["image"]
         image = cv2.resize(image, self.size)
         if image.shape[2] == 3:
             image = np.moveaxis(image, -1, 0)
