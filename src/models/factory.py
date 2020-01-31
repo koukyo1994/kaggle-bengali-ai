@@ -62,6 +62,46 @@ class GeM(nn.Module):
             self.p.data.tolist()[0]) + ', ' + 'eps=' + str(self.eps) + ')'
 
 
+class SpatialAttention2d(nn.Module):
+    def __init__(self, channel):
+        super(SpatialAttention2d, self).__init__()
+        self.squeeze = nn.Conv2d(channel, 1, kernel_size=1, bias=False)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        z = self.squeeze(x)
+        z = self.sigmoid(z)
+        return x * z
+
+
+class GAB(nn.Module):
+    def __init__(self, input_dim, reduction=4):
+        super(GAB, self).__init__()
+        self.global_avgpool = nn.AdaptiveAvgPool2d(1)
+        self.conv1 = nn.Conv2d(
+            input_dim, input_dim // reduction, kernel_size=1, stride=1)
+        self.conv2 = nn.Conv2d(
+            input_dim // reduction, input_dim, kernel_size=1, stride=1)
+        self.relu = nn.ReLU(inplace=True)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        z = self.global_avgpool(x)
+        z = self.relu(self.conv1(z))
+        z = self.sigmoid(self.conv2(z))
+        return x * z
+
+
+class SCse(nn.Module):
+    def __init__(self, dim):
+        super(SCse, self).__init__()
+        self.satt = SpatialAttention2d(dim)
+        self.catt = GAB(dim)
+
+    def forward(self, x):
+        return self.satt(x) + self.catt(x)
+
+
 class Resnet(nn.Module):
     def __init__(self,
                  model_name: str,
@@ -74,7 +114,7 @@ class Resnet(nn.Module):
         self.base = getattr(models, model_name)(pretrained=pretrained)
         self.head = head
         assert in_channels in [1, 3]
-        assert head in ["linear", "custom"]
+        assert head in ["linear", "custom", "scse"]
         if in_channels == 1:
             if pretrained:
                 weight = self.base.conv1.weight
@@ -104,6 +144,21 @@ class Resnet(nn.Module):
             self.consonant_head = nn.Sequential(
                 Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
                 nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
+        elif head == "scse":
+            n_in_features = self.base.fc.in_features
+            arch = list(self.base.children())
+            for _ in range(2):
+                arch.pop()
+            self.base = nn.Sequential(*arch)
+            self.grapheme_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 168))
+            self.vowel_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 11))
+            self.consonant_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 7))
         else:
             raise NotImplementedError
 
@@ -111,6 +166,12 @@ class Resnet(nn.Module):
         if self.head == "linear":
             return self.base(x)
         elif self.head == "custom":
+            x = self.base(x)
+            grapheme = self.grapheme_head(x)
+            vowel = self.vowel_head(x)
+            consonant = self.consonant_head(x)
+            return torch.cat([grapheme, vowel, consonant], dim=1)
+        elif self.head == "scse":
             x = self.base(x)
             grapheme = self.grapheme_head(x)
             vowel = self.vowel_head(x)
