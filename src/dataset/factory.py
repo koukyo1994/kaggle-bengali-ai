@@ -34,7 +34,7 @@ class BaseDataset(torchdata.Dataset):
             new_image = np.ones(
                 (longer_side, longer_side, 3), dtype=np.uint8) * 255
         offset = np.random.randint(0, longer_side - image.shape[0])
-        new_image[offset:offset + image.shape[1], :] = image
+        new_image[offset:offset + image.shape[0], :] = image
 
         if self.transforms is not None:
             image = self.transforms(image=new_image)["image"]
@@ -67,7 +67,7 @@ class BaseTestDataset(torchdata.Dataset):
         longer_side = image.shape[1]
         new_image = np.ones((longer_side, longer_side), dtype=np.uint8) * 255
         offset = np.random.randint(0, longer_side - image.shape[0])
-        new_image[offset:offset + image.shape[1], :] = image
+        new_image[offset:offset + image.shape[0], :] = image
         if self.transforms is not None:
             image = self.transforms(image=new_image)["image"]
         image = cv2.resize(image, self.size)

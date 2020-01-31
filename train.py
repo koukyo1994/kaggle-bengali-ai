@@ -21,6 +21,8 @@ from src.validation import get_validation
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
+    parser.add_argument(
+        "--debug", action="store_true", help="Whether to use debug mode")
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -57,6 +59,10 @@ if __name__ == "__main__":
 
         trn_df = df.loc[trn_idx, :].reset_index(drop=True)
         val_df = df.loc[val_idx, :].reset_index(drop=True)
+        if args.debug:
+            trn_df = trn_df.loc[:1000, :].reset_index(drop=True)
+            val_df = val_df.loc[:1000, :].reset_index(drop=True)
+
         data_loaders = {
             phase: get_base_loader(
                 df,
@@ -93,7 +99,6 @@ if __name__ == "__main__":
             num_epochs=config.train.num_epochs,
             callbacks=callbacks,
             main_metric="tar",
-            state_kwargs={"batch_consistant_metrics": False},
             minimize_metric=False,
             monitoring_params=None,
             verbose=True)

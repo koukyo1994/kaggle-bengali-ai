@@ -98,11 +98,8 @@ class AverageRecall(Callback):
     def on_loader_start(self, state: RunnerState):
         self.prediction: List[int] = []
         self.target: List[int] = []
-        self.batch_count = 0
 
     def on_batch_end(self, state: RunnerState):
-        self.batch_count += 1
-
         targ = state.input[self.target_key].detach()
         out = state.output[self.output_key].detach()
         head = self.offset
@@ -119,18 +116,16 @@ class AverageRecall(Callback):
         score = recall_score(
             target_np, pred_np, average="macro", zero_division=0)
         state.metrics.add_batch_value(name="batch_" + self.prefix, value=score)
-        if self.batch_count == state.loader_len:
-            recall = self._recall()
-            state.metrics.add_batch_value(name=self.prefix, value=recall)
-            self.recall = recall
 
-    def _recall(self):
-        rec = recall_score(
-            y_true=self.target,
-            y_pred=self.prediction,
-            average="macro",
-            zero_division=0)
-        return rec
+    def on_loader_end(self, state: RunnerState):
+        metric_name = self.prefix
+        y_true = np.asarray(self.target)
+        y_pred = np.asarray(self.prediction)
+
+        metric = recall_score(y_true, y_pred, average="macro")
+        state.metrics.epoch_values[state.loader_name][metric_name] = float(
+            metric)
+        self.recall = metric
 
 
 class TotalAverageRecall(Callback):
@@ -173,18 +168,22 @@ class TotalAverageRecall(Callback):
         self.grapheme_callback.on_loader_start(state)
         self.vowel_callback.on_loader_start(state)
         self.consonant_callback.on_loader_start(state)
-        self.batch_count = 0
 
     def on_batch_end(self, state: RunnerState):
-        self.batch_count += 1
         self.grapheme_callback.on_batch_end(state)
         self.vowel_callback.on_batch_end(state)
         self.consonant_callback.on_batch_end(state)
-        if self.batch_count == state.loader_len:
-            grapheme_recall = self.grapheme_callback.recall
-            vowel_recall = self.vowel_callback.recall
-            consonant_recall = self.consonant_callback.recall
-            final_score = np.average(
-                [grapheme_recall, vowel_recall, consonant_recall],
-                weights=[2, 1, 1])
-            state.metrics.add_batch_value(name=self.prefix, value=final_score)
+
+    def on_loader_end(self, state: RunnerState):
+        self.grapheme_callback.on_loader_end(state)
+        self.vowel_callback.on_loader_end(state)
+        self.consonant_callback.on_loader_end(state)
+
+        grapheme_recall = self.grapheme_callback.recall
+        vowel_recall = self.vowel_callback.recall
+        consonant_recall = self.consonant_callback.recall
+        final_score = np.average(
+            [grapheme_recall, vowel_recall, consonant_recall],
+            weights=[2, 1, 1])
+        state.metrics.epoch_values[state.loader_name][self.
+                                                      prefix] = final_score
