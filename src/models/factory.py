@@ -1,3 +1,4 @@
+import pretrainedmodels
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -102,6 +103,88 @@ class SCse(nn.Module):
         return self.satt(x) + self.catt(x)
 
 
+class SEResNext(nn.Module):
+    def __init__(self,
+                 model_name: str,
+                 num_classes: int,
+                 pretrained=None,
+                 head="linear",
+                 in_channels=3):
+        super().__init__()
+        self.num_classes = num_classes
+        self.base = getattr(pretrainedmodels.models,
+                            model_name)(pretrained=pretrained)
+        self.head = head
+        assert in_channels in [1, 3]
+        assert head in ["linear", "custom", "scse"]
+        if in_channels == 1:
+            if pretrained == "imagenet":
+                weight = self.base.layer0.conv1.weight
+                self.base.layer0.conv1 = nn.Conv2d(
+                    1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+                self.base.layer0.conv1.weight = nn.Parameter(
+                    data=torch.mean(weight, dim=1, keepdim=True),
+                    requires_grad=True)
+            else:
+                self.base.layer0.conv1 = nn.Conv2d(
+                    1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        if head == "linear":
+            n_in_features = self.base.last_linear.in_features
+            self.base.last_linear = nn.Linear(n_in_features, self.num_classes)
+        elif head == "custom":
+            n_in_features = self.base.last_linear.in_features
+            arch = list(self.base.children())
+            for _ in range(2):
+                arch.pop()
+            self.base = nn.Sequential(*arch)
+            self.grapheme_head = nn.Sequential(
+                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(
+                    512, 168))
+            self.vowel_head = nn.Sequential(
+                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(
+                    512, 11))
+            self.consonant_head = nn.Sequential(
+                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(512, 7))
+        elif head == "scse":
+            n_in_features = self.base.last_linear.in_features
+            arch = list(self.base.children())
+            for _ in range(2):
+                arch.pop()
+            self.base = nn.Sequential(*arch)
+            self.grapheme_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 168))
+            self.vowel_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 11))
+            self.consonant_head = nn.Sequential(
+                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                nn.Dropout(0.3), nn.Linear(512, 7))
+        else:
+            raise NotImplementedError
+
+    def forward(self, x):
+        if self.head == "linear":
+            return self.base(x)
+        elif self.head == "custom":
+            x = self.base(x)
+            grapheme = self.grapheme_head(x)
+            vowel = self.vowel_head(x)
+            consonant = self.consonant_head(x)
+            return torch.cat([grapheme, vowel, consonant], dim=1)
+        elif self.head == "scse":
+            x = self.base(x)
+            grapheme = self.grapheme_head(x)
+            vowel = self.vowel_head(x)
+            consonant = self.consonant_head(x)
+            return torch.cat([grapheme, vowel, consonant], dim=1)
+        else:
+            raise NotImplementedError
+
+
 class Resnet(nn.Module):
     def __init__(self,
                  model_name: str,
@@ -185,5 +268,7 @@ def get_model(config: edict):
     params = config.model
     if "resnet" in params.model_name:
         return Resnet(**params)
+    elif "se_resnext" in params.model_name:
+        return SEResNext(**params)
     else:
         raise NotImplementedError
