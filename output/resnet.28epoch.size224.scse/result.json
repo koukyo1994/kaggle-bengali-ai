@@ -23,12 +23,12 @@
         "model_name": "resnet34",
         "num_classes": 186,
         "pretrained": true,
-        "head": "custom",
+        "head": "scse",
         "in_channels": 3
     },
     "train": {
         "batch_size": 128,
-        "num_epochs": 10
+        "num_epochs": 30
     },
     "test": {
         "batch_size": 128
@@ -145,31 +145,12 @@
     "log_dir": "log/",
     "num_workers": 2,
     "seed": 1213,
-    "img_size": 128,
+    "img_size": 224,
     "mixup": false,
     "eval_result": {
         "fold0": {
-            "score": 0.8536458937667467,
-            "loss": 1.1763629209084112
-        },
-        "fold1": {
-            "score": 0.8425434977520989,
-            "loss": 1.2825688636227013
-        },
-        "fold2": {
-            "score": 0.8433790443344826,
-            "loss": 1.2586199058468928
-        },
-        "fold3": {
-            "score": 0.8415161340578177,
-            "loss": 1.2959547327582253
-        },
-        "fold4": {
-            "score": 0.842714214109583,
-            "loss": 1.3129221100336437
-        },
-        "overall": {
-            "score": 0.9654439740841717
+            "score": 0.9715643968069476,
+            "loss": 0.2992668798590778
         }
     }
 }
