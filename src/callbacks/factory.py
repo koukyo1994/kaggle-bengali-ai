@@ -2,6 +2,7 @@ from easydict import EasyDict as edict
 
 from .metrics import TotalAverageRecall, MacroAverageRecall, AverageRecall
 from .save import SaveWeightsCallback
+from .augmentation import MixupOrCutmixCallback
 
 
 def get_callbacks(config: edict):

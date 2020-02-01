@@ -2,18 +2,20 @@ import numpy as np
 import torch
 
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from catalyst.dl.core import Callback, CallbackOrder, RunnerState
 
 
 class SaveWeightsCallback(Callback):
     def __init__(self,
-                 to: Optional[Path] = None,
+                 to: Optional[Union[Path, str]] = None,
                  name: str = "",
                  is_larger_better=True,
                  main_metric="tar"):
         self.to = to
+        if isinstance(self.to, str):
+            self.to = Path(self.to)
         self.name = name
         self.best = -np.inf if is_larger_better else np.inf
         self.is_larger_better = is_larger_better

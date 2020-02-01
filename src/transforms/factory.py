@@ -32,7 +32,7 @@ def get_transforms(config: edict, phase: str = "train"):
                  A.RandomBrightness()],
                 p=0.5))
     if cfg.Cutout.num_holes > 0:
-        list_transforms.append(A.Cutout(**config.Cutout))
+        list_transforms.append(A.Cutout(**cfg.Cutout))
 
     list_transforms.append(
         A.Normalize(

@@ -6,7 +6,6 @@ import pandas as pd
 from pathlib import Path
 
 from catalyst.dl import SupervisedRunner
-from catalyst.dl.callbacks import MixupCallback
 
 from src.callbacks import get_callbacks
 from src.dataset import get_base_loader
@@ -79,10 +78,6 @@ if __name__ == "__main__":
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
         callbacks = get_callbacks(config)
-        if config.mixup:
-            callbacks.append(MixupCallback(fields=[
-                "images",
-            ]))
 
         runner = SupervisedRunner(
             device=ct.utils.get_device(),
