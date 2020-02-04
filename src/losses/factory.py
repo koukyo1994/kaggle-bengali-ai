@@ -68,6 +68,15 @@ class BengaliBCELoss(nn.Module):
             self.bce(consonant_pred, consonant_true)
 
 
+class GraphemeLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.loss = nn.CrossEntropyLoss()
+
+    def forward(self, pred, true):
+        return self.loss(pred, true[:, 0])
+
+
 def get_loss(config: edict):
     name = config.loss.name
     params = config.loss.params
@@ -75,6 +84,8 @@ def get_loss(config: edict):
         criterion = BengaliBCELoss(**params)
     elif name == "cross_entropy":
         criterion = BengaliCrossEntropyLoss(**params)  # type: ignore
+    elif name == "grapheme":
+        criterion = GraphemeLoss()  # type: ignore
     else:
         raise NotImplementedError
     return criterion

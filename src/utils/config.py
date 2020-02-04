@@ -27,6 +27,7 @@ def _get_default():
     cfg.model.pretrained = True
     cfg.model.head = "linear"
     cfg.model.in_channels = 3
+    cfg.model.outputs = ["grapheme", "vowel", "consonant"]
 
     # train
     cfg.train = edict()

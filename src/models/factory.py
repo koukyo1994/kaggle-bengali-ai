@@ -109,7 +109,8 @@ class SEResNext(nn.Module):
                  num_classes: int,
                  pretrained=None,
                  head="linear",
-                 in_channels=3):
+                 in_channels=3,
+                 outputs=["grapheme", "vowel", "consonant"]):
         super().__init__()
         self.num_classes = num_classes
         self.base = getattr(pretrainedmodels.models,
@@ -117,6 +118,9 @@ class SEResNext(nn.Module):
         self.head = head
         assert in_channels in [1, 3]
         assert head in ["linear", "custom", "scse"]
+        for out in outputs:
+            assert out in {"grapheme", "vowel", "consonant"}
+        self.outputs = outputs
         if in_channels == 1:
             if pretrained == "imagenet":
                 weight = self.base.layer0.conv1.weight
@@ -137,50 +141,55 @@ class SEResNext(nn.Module):
             for _ in range(2):
                 arch.pop()
             self.base = nn.Sequential(*arch)
-            self.grapheme_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(
-                    512, 168))
-            self.vowel_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(
-                    512, 11))
-            self.consonant_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3), nn.Linear(512, 7))
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
         elif head == "scse":
             n_in_features = self.base.last_linear.in_features
             arch = list(self.base.children())
             for _ in range(2):
                 arch.pop()
             self.base = nn.Sequential(*arch)
-            self.grapheme_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 168))
-            self.vowel_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 11))
-            self.consonant_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 7))
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 7))
         else:
             raise NotImplementedError
 
     def forward(self, x):
         if self.head == "linear":
             return self.base(x)
-        elif self.head == "custom":
+        elif self.head == "custom" or self.head == "scse":
             x = self.base(x)
-            grapheme = self.grapheme_head(x)
-            vowel = self.vowel_head(x)
-            consonant = self.consonant_head(x)
-            return torch.cat([grapheme, vowel, consonant], dim=1)
-        elif self.head == "scse":
-            x = self.base(x)
-            grapheme = self.grapheme_head(x)
-            vowel = self.vowel_head(x)
-            consonant = self.consonant_head(x)
-            return torch.cat([grapheme, vowel, consonant], dim=1)
+            outputs = []
+            if "grapheme" in self.outputs:
+                grapheme = self.grapheme_head(x)
+                outputs.append(grapheme)
+            if "vowel" in self.outputs:
+                vowel = self.vowel_head(x)
+                outputs.append(vowel)
+            if "consonant" in self.outputs:
+                consonant = self.consonant_head(x)
+                outputs.append(consonant)
+            return torch.cat(outputs, dim=1)
         else:
             raise NotImplementedError
 
@@ -191,13 +200,17 @@ class Resnet(nn.Module):
                  num_classes: int,
                  pretrained=False,
                  head="linear",
-                 in_channels=3):
+                 in_channels=3,
+                 outputs=["grapheme", "vowel", "consonant"]):
         super().__init__()
         self.num_classes = num_classes
         self.base = getattr(models, model_name)(pretrained=pretrained)
         self.head = head
         assert in_channels in [1, 3]
         assert head in ["linear", "custom", "scse"]
+        for out in outputs:
+            assert out in {"grapheme", "vowel", "consonant"}
+        self.outputs = outputs
         if in_channels == 1:
             if pretrained:
                 weight = self.base.conv1.weight
@@ -218,48 +231,55 @@ class Resnet(nn.Module):
             for _ in range(2):
                 arch.pop()
             self.base = nn.Sequential(*arch)
-            self.grapheme_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Linear(512, 168))
-            self.vowel_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Linear(512, 11))
-            self.consonant_head = nn.Sequential(
-                Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
         elif head == "scse":
             n_in_features = self.base.fc.in_features
             arch = list(self.base.children())
             for _ in range(2):
                 arch.pop()
             self.base = nn.Sequential(*arch)
-            self.grapheme_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 168))
-            self.vowel_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 11))
-            self.consonant_head = nn.Sequential(
-                SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
-                nn.Dropout(0.3), nn.Linear(512, 7))
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 7))
         else:
             raise NotImplementedError
 
     def forward(self, x):
         if self.head == "linear":
             return self.base(x)
-        elif self.head == "custom":
+        elif self.head == "custom" or self.head == "scse":
             x = self.base(x)
-            grapheme = self.grapheme_head(x)
-            vowel = self.vowel_head(x)
-            consonant = self.consonant_head(x)
-            return torch.cat([grapheme, vowel, consonant], dim=1)
-        elif self.head == "scse":
-            x = self.base(x)
-            grapheme = self.grapheme_head(x)
-            vowel = self.vowel_head(x)
-            consonant = self.consonant_head(x)
-            return torch.cat([grapheme, vowel, consonant], dim=1)
+            outputs = []
+            if "grapheme" in self.outputs:
+                grapheme = self.grapheme_head(x)
+                outputs.append(grapheme)
+            if "vowel" in self.outputs:
+                vowel = self.vowel_head(x)
+                outputs.append(vowel)
+            if "consonant" in self.outputs:
+                consonant = self.consonant_head(x)
+                outputs.append(consonant)
+            return torch.cat(outputs, dim=1)
         else:
             raise NotImplementedError
 
