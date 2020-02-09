@@ -1,0 +1,177 @@
+{
+    "dataset": {
+        "train": {
+            "affine": true,
+            "morphology": false
+        },
+        "val": {
+            "affine": false,
+            "morphology": false
+        },
+        "test": {
+            "affine": false,
+            "morphology": false
+        }
+    },
+    "data": {
+        "train_df_path": "input/bengaliai-cv19/train.csv",
+        "train_images_path": "input/bengaliai-cv19/train_images",
+        "test_images_path": "input/bengaliai-cv19/test_images",
+        "sample_submission_path": "input/bengaliai-cv19/sample_submission.csv"
+    },
+    "model": {
+        "model_name": "resnet34",
+        "num_classes": 186,
+        "pretrained": "imagenet",
+        "head": "custom",
+        "in_channels": 3,
+        "outputs": [
+            "grapheme",
+            "vowel",
+            "consonant"
+        ]
+    },
+    "train": {
+        "batch_size": 128,
+        "num_epochs": 70
+    },
+    "test": {
+        "batch_size": 128
+    },
+    "loss": {
+        "params": {
+            "n_grapheme": 168,
+            "n_vowel": 11,
+            "n_consonant": 7,
+            "weights": [
+                2.0,
+                1.0,
+                1.0
+            ]
+        },
+        "name": "cross_entropy"
+    },
+    "optimizer": {
+        "params": {
+            "lr": 0.0001
+        },
+        "name": "Adam"
+    },
+    "scheduler": {
+        "params": {
+            "T_max": 10
+        },
+        "name": "cosine"
+    },
+    "transforms": {
+        "train": {
+            "HorizontalFlip": false,
+            "VerticalFlip": false,
+            "Noise": false,
+            "Contrast": false,
+            "Rotate": true,
+            "RandomScale": true,
+            "Cutout": {
+                "num_holes": 0
+            }
+        },
+        "val": {
+            "HorizontalFlip": false,
+            "VerticalFlip": false,
+            "Noise": false,
+            "Contrast": false,
+            "Rotate": false,
+            "RandomScale": false,
+            "Cutout": {
+                "num_holes": 0
+            }
+        },
+        "test": {
+            "HorizontalFlip": false,
+            "VerticalFlip": false,
+            "Noise": false,
+            "Contrast": false,
+            "Rotate": false,
+            "RandomScale": false,
+            "Cutout": {
+                "num_holes": 0
+            }
+        },
+        "mean": [
+            0.485,
+            0.456,
+            0.406
+        ],
+        "std": [
+            0.229,
+            0.224,
+            0.225
+        ]
+    },
+    "val": {
+        "params": {
+            "random_state": 42,
+            "n_splits": 5
+        },
+        "name": "kfold"
+    },
+    "callbacks": [
+        {
+            "AverageRecall": {
+                "index": 0,
+                "offset": 0,
+                "n_classes": 168,
+                "prefix": "grapheme_recall",
+                "loss_type": "cross_entroy"
+            }
+        },
+        {
+            "AverageRecall": {
+                "index": 1,
+                "offset": 168,
+                "n_classes": 11,
+                "prefix": "vowel_recall",
+                "loss_type": "cross_entropy"
+            }
+        },
+        {
+            "AverageRecall": {
+                "index": 2,
+                "offset": 179,
+                "n_classes": 7,
+                "prefix": "consonant_recall",
+                "loss_type": "cross_entropy"
+            }
+        },
+        {
+            "TotalAverageRecall": {
+                "loss_type": "cross_entropy"
+            }
+        },
+        {
+            "SaveWeightsCallback": {
+                "to": "/content/gdrive/My Drive/kaggle-bengali/checkpoints/fold{}/",
+                "name": {},
+                "is_larger_better": true,
+                "main_metric": "tar"
+            }
+        },
+        {
+            "MixupOrCutmixCallback": {
+                "mixup_prob": 0.5,
+                "cutmix_prob": 0.0
+            }
+        }
+    ],
+    "log_dir": "log/",
+    "num_workers": 2,
+    "seed": 1213,
+    "img_size": 128,
+    "weights": "/content/gdrive/My Drive/kaggle-bengali/checkpoints/fold0/resnet34_size128_　70epoch_weighted_loss_mixup.pth",
+    "eval_result": {
+        "fold0": {
+            "score": 0.969223055464706,
+            "loss": 0.47166100362683605
+        }
+    }
+}
