@@ -144,15 +144,18 @@ class SEResNext(nn.Module):
             if "grapheme" in self.outputs:
                 self.grapheme_head = nn.Sequential(
                     Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 168))
+                    nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3),
+                    nn.Linear(512, 168))
             if "vowel" in self.outputs:
                 self.vowel_head = nn.Sequential(
                     Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 11))
+                    nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3),
+                    nn.Linear(512, 11))
             if "consonant" in self.outputs:
                 self.consonant_head = nn.Sequential(
                     Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
-                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
+                    nn.BatchNorm2d(512), GeM(), nn.Dropout(0.3),
+                    nn.Linear(512, 7))
         elif head == "scse":
             n_in_features = self.base.last_linear.in_features
             arch = list(self.base.children())
