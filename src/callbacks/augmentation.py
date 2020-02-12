@@ -36,6 +36,7 @@ class MixupOrCutmixCallback(CriterionCallback):
                  on_train_only=True,
                  mixup_prob=0.5,
                  cutmix_prob=0.5,
+                 no_aug_epochs=0,
                  **kwargs):
         assert len(fields) > 0, \
             "At least one field is required"
@@ -56,10 +57,14 @@ class MixupOrCutmixCallback(CriterionCallback):
         self.mixup_prob = mixup_prob
         self.cutmix_prob = cutmix_prob
         self.no_action_prob = 1 - (mixup_prob + cutmix_prob)
+        self.no_aug_epochs = no_aug_epochs
 
     def on_loader_start(self, state: RunnerState):
         self.is_needed = not self.on_train_only or \
             state.loader_name.startswith("train")
+
+        if state.num_epochs - state.epoch < self.no_aug_epochs:
+            self.is_needed = False
 
     def on_batch_start(self, state: RunnerState):
         if not self.is_needed:
