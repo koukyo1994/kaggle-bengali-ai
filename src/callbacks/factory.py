@@ -1,5 +1,7 @@
 from easydict import EasyDict as edict
 
+from catalyst.dl.callbacks import OptimizerCallback
+
 from .metrics import TotalAverageRecall, MacroAverageRecall, AverageRecall
 from .save import SaveWeightsCallback
 from .augmentation import MixupOrCutmixCallback
