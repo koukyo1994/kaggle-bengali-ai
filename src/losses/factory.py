@@ -197,6 +197,62 @@ class BengaliBCELoss(nn.Module):
             self.bce(consonant_pred, consonant_true)
 
 
+class OHEMLoss(nn.Module):
+    def __init__(self, rate=0.7):
+        super().__init__()
+        self.rate = rate
+
+    def forward(self, pred, target):
+        batch_size = pred.size(0)
+        ohem_cls_loss = F.cross_entropy(
+            pred, target, reduction="none", ignore_index=-1)
+
+        sorted_ohem_loss, idx = torch.sort(ohem_cls_loss, descending=True)
+        keep_num = min(sorted_ohem_loss.size(0), int(batch_size * self.rate))
+        if keep_num < sorted_ohem_loss.size(0):
+            keep_idx_cuda = idx[:keep_num]
+            ohem_cls_loss = ohem_cls_loss[keep_idx_cuda]
+        cls_loss = ohem_cls_loss.sum() / keep_num
+        return cls_loss
+
+
+class BengaliOHEMLoss(nn.Module):
+    def __init__(self,
+                 n_grapheme: int,
+                 n_vowel: int,
+                 n_consonant: int,
+                 weights=(1.0, 1.0, 1.0),
+                 rate=0.7):
+        super().__init__()
+        self.n_grapheme = n_grapheme
+        self.n_vowel = n_vowel
+        self.n_consonant = n_consonant
+        self.ohem = OHEMLoss(rate=rate)
+        self.weights = weights
+
+    def forward(self, pred, true):
+        head = 0
+        tail = self.n_grapheme
+        grapheme_pred = pred[:, head:tail]
+        grapheme_true = true[:, 0]
+
+        head = tail
+        tail = head + self.n_vowel
+        vowel_pred = pred[:, head:tail]
+        vowel_true = true[:, 1]
+
+        head = tail
+        tail = head + self.n_consonant
+        consonant_pred = pred[:, head:tail]
+        consonant_true = true[:, 2]
+
+        return self.weights[0] * self.ohem(
+            grapheme_pred, grapheme_true) + \
+            self.weights[1] * self.ohem(vowel_pred, vowel_true) + \
+            self.weights[2] * self.ohem(
+                consonant_pred, consonant_true)
+
+
 class GraphemeLoss(nn.Module):
     def __init__(self):
         super().__init__()
@@ -219,6 +275,8 @@ def get_loss(config: edict):
         criterion = BengaliMultiMarginLoss(**params)  # type: ignore
     elif name == "focal":
         criterion = BengaliFocalLoss(**params)  # type: ignore
+    elif name == "ohem":
+        criterion = BengaliOHEMLoss(**params)  # type: ignore
     else:
         raise NotImplementedError
     return criterion
