@@ -58,6 +58,10 @@ def _get_default():
     cfg.transforms.train.RandomScale = False
     cfg.transforms.train.Cutout = edict()
     cfg.transforms.train.Cutout.num_holes = 0
+    cfg.transforms.train.ShiftScaleRotate = False
+    cfg.transforms.train.RandomResizedCrop = False
+    cfg.transforms.train.CoarseDropout = False
+    cfg.transforms.train.GridDistortion = False
     cfg.transforms.val = edict()
     cfg.transforms.val.HorizontalFlip = False
     cfg.transforms.val.VerticalFlip = False
@@ -67,6 +71,10 @@ def _get_default():
     cfg.transforms.val.RandomScale = False
     cfg.transforms.val.Cutout = edict()
     cfg.transforms.val.Cutout.num_holes = 0
+    cfg.transforms.val.ShiftScaleRotate = False
+    cfg.transforms.val.RandomResizedCrop = False
+    cfg.transforms.val.CoarseDropout = False
+    cfg.transforms.val.GridDistortion = False
     cfg.transforms.test = edict()
     cfg.transforms.test.HorizontalFlip = False
     cfg.transforms.test.VerticalFlip = False
@@ -76,6 +84,10 @@ def _get_default():
     cfg.transforms.test.RandomScale = False
     cfg.transforms.test.Cutout = edict()
     cfg.transforms.test.Cutout.num_holes = 0
+    cfg.transforms.test.ShiftScaleRotate = False
+    cfg.transforms.test.RandomResizedCrop = False
+    cfg.transforms.test.CoarseDropout = False
+    cfg.transforms.test.GridDistortion = False
     cfg.transforms.mean = [0.485, 0.456, 0.406]
     cfg.transforms.std = [0.229, 0.224, 0.225]
 

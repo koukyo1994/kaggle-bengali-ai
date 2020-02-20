@@ -33,6 +33,18 @@ def get_transforms(config: edict, phase: str = "train"):
                 p=0.5))
     if cfg.Cutout.num_holes > 0:
         list_transforms.append(A.Cutout(**cfg.Cutout))
+    if cfg.ShiftScaleRotate:
+        list_transforms.append(
+            A.ShiftScaleRotate(
+                shift_limit=0.0625, scale_limit=0, rotate_limit=7, p=0.5))
+    if cfg.RandomResizedCrop:
+        list_transforms.append(
+            A.RandomResizedCrop(128, 128, scale=(0.8, 1), p=0.5))
+    if cfg.CoarseDropout:
+        list_transforms.append(
+            A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.2))
+    if cfg.GridDistortion:
+        list_transforms.append(A.GridDistortion(p=0.2))
 
     list_transforms.append(
         A.Normalize(
