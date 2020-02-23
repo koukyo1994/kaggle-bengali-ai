@@ -160,3 +160,11 @@ def crop_resize(img0: np.ndarray, size=(128, 128), pad=16):
     img = np.pad(
         img, [((lxy - ly) // 2, ), ((lxy - lx) // 2, )], mode='constant')
     return cv2.resize(img, size)
+
+
+def binarization_and_opening(img: np.ndarray, threshold=150, kernel_size=3):
+    new_img = img.copy()
+    new_img[img < threshold] = 0
+    new_img[img >= threshold] = 255
+    kernel = np.ones((kernel_size, kernel_size), np.uint8)
+    return cv2.morphologyEx(new_img, cv2.MORPH_OPEN, kernel)

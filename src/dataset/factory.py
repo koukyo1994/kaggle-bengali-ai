@@ -7,16 +7,22 @@ from pathlib import Path
 from typing import Tuple, Dict
 
 from .utils import (crop_and_embed, normalize, affine_image,
-                    random_erosion_or_dilation, to_image, crop_resize)
+                    random_erosion_or_dilation, to_image, crop_resize,
+                    binarization_and_opening)
 
 
 class BaseDataset(torchdata.Dataset):
-    def __init__(self, image_dir: Path, df: pd.DataFrame, transforms,
-                 size: Tuple[int, int]):
+    def __init__(self,
+                 image_dir: Path,
+                 df: pd.DataFrame,
+                 transforms,
+                 size: Tuple[int, int],
+                 binarization=False):
         self.df = df
         self.image_dir = image_dir
         self.transforms = transforms
         self.size = size
+        self.binarization = binarization
 
     def __len__(self):
         return len(self.df)
@@ -26,6 +32,8 @@ class BaseDataset(torchdata.Dataset):
         image_path = self.image_dir / f"{image_id}.png"
 
         image = cv2.imread(str(image_path))
+        if self.binarization:
+            image = binarization_and_opening(image)
         longer_side = image.shape[1]
         if image.ndim == 2:
             new_image = np.ones(
@@ -52,10 +60,15 @@ class BaseDataset(torchdata.Dataset):
 
 
 class BaseTestDataset(torchdata.Dataset):
-    def __init__(self, df: pd.DataFrame, transforms, size: Tuple[int, int]):
+    def __init__(self,
+                 df: pd.DataFrame,
+                 transforms,
+                 size: Tuple[int, int],
+                 binarization=False):
         self.images = df.iloc[:, 1:].values.reshape(-1, 137, 236)
         self.size = size
         self.transforms = transforms
+        self.binarization = binarization
 
     def __len__(self):
         return len(self.images)
@@ -64,6 +77,8 @@ class BaseTestDataset(torchdata.Dataset):
         image = self.images[idx]
         if image.ndim == 2:
             image = np.moveaxis(np.stack([image, image, image]), 0, -1)
+        if self.binarization:
+            image = binarization_and_opening(image)
         longer_side = image.shape[1]
         new_image = np.ones((longer_side, longer_side), dtype=np.uint8) * 255
         offset = np.random.randint(0, longer_side - image.shape[0])
@@ -177,8 +192,9 @@ def get_base_test_loader(df: pd.DataFrame,
                          size: Tuple[int, int] = (128, 128),
                          batch_size=256,
                          num_workers=2,
-                         transforms=None):
-    dataset = BaseTestDataset(df, transforms, size)
+                         transforms=None,
+                         binarization=False):
+    dataset = BaseTestDataset(df, transforms, size, binarization)
     return torchdata.DataLoader(
         dataset,
         batch_size=batch_size,
@@ -193,7 +209,8 @@ def get_base_loader(df: pd.DataFrame,
                     size: Tuple[int, int] = (128, 128),
                     batch_size=256,
                     num_workers=2,
-                    transforms=None):
+                    transforms=None,
+                    binarization=False):
     assert phase in ["train", "valid"]
     if phase == "train":
         is_shuffle = True
@@ -203,7 +220,7 @@ def get_base_loader(df: pd.DataFrame,
         drop_last = False
 
     dataset = BaseDataset(  # type: ignore
-        image_dir, df, transforms, size)
+        image_dir, df, transforms, size, binarization)
     return torchdata.DataLoader(
         dataset,
         batch_size=batch_size,
