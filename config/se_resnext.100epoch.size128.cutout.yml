@@ -1,0 +1,140 @@
+dataset:
+  train:
+    affine: False
+    morphology: False
+  val:
+    affine: False
+    morphology: False
+  test:
+    affine: False
+    morphology: False
+
+data:
+  train_df_path: input/bengaliai-cv19/train.csv
+  train_images_path: input/bengaliai-cv19/train_images
+  test_images_path: input/bengaliai-cv19/test_images
+  sample_submission_path: input/bengaliai-cv19/sample_submission.csv
+
+model:
+  model_name: se_resnext50_32x4d
+  pretrained:
+  num_classes: 186
+  head: custom
+  in_channels: 3
+  outputs:
+    - grapheme
+    - vowel
+    - consonant
+
+train:
+  batch_size: 128
+  num_epochs: 100
+
+test:
+  batch_size: 128
+
+loss:
+  name: ohem
+  params:
+    n_grapheme: 168
+    n_vowel: 11
+    n_consonant: 7
+    weights:
+      - 2.0
+      - 1.0
+      - 1.0
+
+optimizer:
+  name: Adam
+  params:
+    lr: 0.0001
+
+scheduler:
+  name: cosine
+  params:
+    T_max: 10
+
+transforms:
+  train:
+    Noise: False
+    Contrast: False
+    Rotate: True
+    RandomScale: True
+    Cutout:
+      num_holes: 1
+      max_h_size: 50
+      max_w_size: 75
+      fill_value: 255
+      always_apply: True
+  val:
+    Noise: False
+    Contrast: False
+    Rotate: False
+    RandomScale: False
+    Cutout:
+      num_holes: 0
+  test:
+    Noise: False
+    Contrast: False
+    Rotate: False
+    RandomScale: False
+    Cutout:
+      num_holes: 0
+
+val:
+  name: kfold
+  params:
+    random_state: 42
+    n_splits: 5
+
+callbacks:
+  - AverageRecall:
+      index: 0
+      offset: 0
+      n_classes: 168
+      prefix: grapheme_recall
+      loss_type: cross_entroy
+  - AverageRecall:
+      index: 1
+      offset: 168
+      n_classes: 11
+      prefix: vowel_recall
+      loss_type: cross_entropy
+  - AverageRecall:
+      index: 2
+      offset: 179
+      n_classes: 7
+      prefix: consonant_recall
+      loss_type: cross_entropy
+  - TotalAverageRecall:
+      loss_type: cross_entropy
+  - SaveWeightsCallback:
+      to:
+      name: best_tar
+      is_larger_better: True
+      main_metric: tar
+  - SaveWeightsCallback:
+      to:
+      name: best_grapheme
+      is_larger_better: True
+      main_metric: grapheme_recall
+  - SaveWeightsCallback:
+      to:
+      name: best_vowel
+      is_larger_better: True
+      main_metric: vowel_recall
+  - SaveWeightsCallback:
+      to:
+      name: best_consonant
+      is_larger_better: True
+      main_metric: consonant_recall
+  - MixupOrCutmixCallback:
+      mixup_prob: 0.5
+      cutmix_prob: 0.0
+      no_aug_epochs: 5
+
+log_dir: log/
+num_workers: 2
+seed: 1213
+img_size: 128
+weights:
