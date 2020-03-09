@@ -82,31 +82,6 @@ val:
   params:
 
 callbacks:
-  - AverageRecall:
-      index: 0
-      offset: 0
-      n_classes: 168
-      prefix: grapheme_recall
-      loss_type: cross_entroy
-  - AverageRecall:
-      index: 1
-      offset: 168
-      n_classes: 11
-      prefix: vowel_recall
-      loss_type: cross_entropy
-  - AverageRecall:
-      index: 2
-      offset: 179
-      n_classes: 7
-      prefix: consonant_recall
-      loss_type: cross_entropy
-  - TotalAverageRecall:
-      loss_type: cross_entropy
-  - SaveWeightsCallback:
-      to: /content/gdrive/My Drive/kaggle-bengali/checkpoints/fold0/
-      name: no_fold.pth
-      is_larger_better: True
-      main_metric: tar
   - MixupOrCutmixCallback:
       mixup_prob: 0.5
       cutmix_prob: 0.0

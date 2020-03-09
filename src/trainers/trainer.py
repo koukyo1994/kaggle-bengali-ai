@@ -1,21 +1,24 @@
 import numpy as np
 import torch
-import torch.nn as nn
 
 from fastprogress import progress_bar
 
-from .state import State
-
 
 class BatchCallback:
-    def on_loader_start(self, epoch: int, num_epochs: int):
-        raise NotImplementedError
+    def __init__(self):
+        self.device = torch.device("cuda" if torch.cuda.
+                                   is_available() else "cpu")
 
-    def on_batch_start(self, batch):
-        raise NotImplementedError
+    def on_loader_start(self, state: dict):
+        return state
 
-    def on_batch_end(self, batch):
-        raise NotImplementedError
+    def on_batch_start(self, state: dict):
+        state["batch"]["images"] = state["batch"]["images"].to(self.device)
+        state["batch"]["targets"] = state["batch"]["tragets"].to(self.device)
+        return state
+
+    def on_batch_end(self, state: dict):
+        return state
 
 
 def rand_bbox(size, lam):
@@ -36,12 +39,46 @@ def rand_bbox(size, lam):
     return bbx1, bby1, bbx2, bby2
 
 
-class MixupOrCutmixCallback(BatchCallback):
+class CriterionCallback(BatchCallback):
+    def __init__(self, criterion):
+        self.criterion = criterion
+        super().__init__()
+
+    def on_loader_start(self, state: dict):
+        self.avg_loss = 0.0
+        self.n_steps = len(state["loader"])
+        return state
+
+    def _calc_loss(self, state: dict):
+        batch = state["batch"]
+        target = batch["targets"]
+        pred = state["pred"]
+        loss = self.criterion(pred, target)
+        return loss
+
+    def on_batch_end(self, state: dict):
+        optimizer = state["optimizer"]
+        scheduler = state["scheduler"]
+        optimizer.zero_grad()
+
+        loss = self._calc_loss(state)
+        loss.backward()
+        optimizer.step()
+        scheduler.step()
+        self.avg_loss += loss.item() / self.n_steps
+        state["avg_loss"] = self.avg_loss
+        return state
+
+
+class MixupOrCutmixCallback(CriterionCallback):
     def __init__(self,
+                 criterion,
                  alpha=1.0,
                  mixup_prob=0.5,
                  cutmix_prob=0.5,
                  no_aug_epochs=0):
+        super().__init__(criterion)
+
         assert alpha >= 0, "alpha must be>=0"
         assert 1 >= mixup_prob >= 0, "mixup_prob must be within 1 and 0"
         assert 1 >= cutmix_prob >= 0, "cutmix_prob must be within 1 and 0"
@@ -55,16 +92,16 @@ class MixupOrCutmixCallback(BatchCallback):
         self.no_action_prob = 1 - (mixup_prob + cutmix_prob)
         self.no_aug_epochs = no_aug_epochs
 
-        self.device = torch.device("cuda" if torch.cuda.
-                                   is_available() else "cpu")
-
-    def on_loader_start(self, epoch: int, num_epochs: int):
-        if num_epochs - epoch <= self.no_aug_epochs:
+    def on_loader_start(self, state: dict):
+        state = super().on_loader_start(state)
+        if state["num_epochs"] - state["epoch"] <= self.no_aug_epochs:
             self.is_needed = False
+        return state
 
-    def on_batch_start(self, batch):
+    def on_batch_start(self, state: dict):
+        batch = state["batch"]
         if not self.is_needed:
-            return batch
+            return state
 
         dice = np.random.choice([0, 1, 2],
                                 p=(self.mixup_prob, self.cutmix_prob,
@@ -96,15 +133,55 @@ class MixupOrCutmixCallback(BatchCallback):
                     (batch["images"].size()[-1] * batch["images"].size()[-2]))
         else:
             pass
-        return batch
+        state["batch"] = batch
+        return state
+
+    def _calc_loss(self, state: dict):
+        if not self.is_needed:
+            return super()._calc_loss(state)
+
+        if self.dice == 0 or self.dice == 1:
+            pred = state["pred"]
+            y_a = state["batch"]["targets"]
+            y_b = state["batch"]["targets"][self.index]
+            loss = self.lam * self.criterion(pred, y_a) + \
+                (1 - self.lam) * self.criterion(pred, y_b)
+            return loss
+        else:
+            return super()._calc_loss(state)
+
+
+def run_callbacks(callbacks, state: dict, phase: str):
+    for callback in callbacks:
+        state = callback.__getattribute__(phase)(state)
+    return state
 
 
 def train_one_epoch(model, criterion, optimizer, scheduler, loader,
-                    current_epoch, batch_callbacks):
+                    current_epoch, batch_callbacks, num_epochs: int):
     model.train()
-    avg_loss = 0.0
+    state = {
+        "optimizer": optimizer,
+        "scheduler": scheduler,
+        "loader": loader,
+        "epoch": current_epoch,
+        "num_epochs": num_epochs
+    }
+    state = run_callbacks(batch_callbacks, state, "on_loader_start")
 
     for loader_output in progress_bar(loader, leave=False):
-        images = loader_output["images"].to(device)
-        targets = loader_output["targets"].to(device)
-        preds = model(images)
+        state["batch"] = loader_output
+        state = run_callbacks(batch_callbacks, state, "on_batch_start")
+        state["pred"] = model(state["batch"]["images"])
+        state = run_callbacks(batch_callbacks, state, "on_batch_end")
+    return state
+
+
+def train(model, criterion, optimizer, scheduler, loader, callbacks,
+          num_epochs: int):
+    for epoch in range(num_epochs):
+        print(f"Epoch: [{epoch + 1}/{num_epochs}]:", end=" ")
+        state = train_one_epoch(model, criterion, optimizer, scheduler, loader,
+                                epoch + 1, callbacks, num_epochs)
+        print(f"avg_loss: {state['avg_loss']:.5f}")
+    return model

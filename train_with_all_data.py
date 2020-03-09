@@ -11,6 +11,7 @@ from src.optimizers import get_optimizer
 from src.schedulers import get_scheduler
 from src.transforms import get_transforms
 from src.utils import load_config, seed_torch
+from src.trainers.trainer import MixupOrCutmixCallback, train
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -56,3 +57,9 @@ if __name__ == "__main__":
     criterion = get_loss(config)
     optimizer = get_optimizer(model, config)
     scheduler = get_scheduler(optimizer, config)
+    callbacks = [
+        MixupOrCutmixCallback(
+            criterion, mixup_prob=0.5, cutmix_prob=0.0, no_aug_epochs=5)
+    ]
+    model = train(model, criterion, optimizer, scheduler, data_loader,
+                  callbacks, config["train"]["num_epochs"])
