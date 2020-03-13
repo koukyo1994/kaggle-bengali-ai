@@ -2,10 +2,12 @@ import argparse
 
 import catalyst as ct
 import pandas as pd
+import torch
 
 from pathlib import Path
 
 from catalyst.dl import SupervisedRunner
+from catalyst.utils import get_device
 
 from src.callbacks import get_callbacks
 from src.dataset import get_base_loader
@@ -21,6 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--folds", nargs="*", type=int, required=True)
+    parser.add_argument("device", default="auto")
     parser.add_argument(
         "--debug", action="store_true", help="Whether to use debug mode")
     args = parser.parse_args()
@@ -29,6 +32,11 @@ if __name__ == "__main__":
 
     ct.utils.set_global_seed(config.seed)
     ct.utils.prepare_cudnn(deterministic=True)
+
+    if args.device == "auto":
+        device = get_device()
+    else:
+        device = torch.device(args.device)
 
     output_root_dir = Path("output")
     output_base_dir = output_root_dir / args.config.replace(".yml",
@@ -77,14 +85,14 @@ if __name__ == "__main__":
                 transforms=transforms_dict[phase])
             for phase, df in zip(["train", "valid"], [trn_df, val_df])
         }
-        model = get_model(config)
-        criterion = get_loss(config)
+        model = get_model(config).to(device)
+        criterion = get_loss(config).to(device)
         optimizer = get_optimizer(model, config)
         scheduler = get_scheduler(optimizer, config)
         callbacks = get_callbacks(config)
 
         runner = SupervisedRunner(
-            device=ct.utils.get_device(),
+            device=device,
             input_key="images",
             input_target_key="targets",
             output_key="logits")
