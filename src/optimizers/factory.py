@@ -12,7 +12,7 @@ def get_optimizer(model, config: edict) -> Optimizer:
     if name == "Adam":
         optimizer = Adam(model.parameters(), **params)
     elif name == "SGD":
-        optimizer = Adam(model.parameters(), **params)
+        optimizer = SGD(model.parameters(), **params)
     else:
         raise NotImplementedError
     return optimizer
