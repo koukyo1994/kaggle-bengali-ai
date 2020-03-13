@@ -33,7 +33,7 @@ def multilabel_stratified_kfold(df: pd.DataFrame, config: edict
     target_cols = ["grapheme_root", "vowel_diacritic", "consonant_diacritic"]
     train_df = df[target_cols].astype("uint8")
     for col in target_cols:
-        train_df = train_df[col].map("{:03}".format)
+        train_df[col] = train_df[col].map("{:03}".format)
     Y = pd.get_dummies(train_df)
     splits = list(kf.split(idx, Y))
     return splits
