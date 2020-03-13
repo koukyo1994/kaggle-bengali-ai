@@ -23,7 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--folds", nargs="*", type=int, required=True)
-    parser.add_argument("device", default="auto")
+    parser.add_argument("--device", default="auto")
     parser.add_argument(
         "--debug", action="store_true", help="Whether to use debug mode")
     args = parser.parse_args()
