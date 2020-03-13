@@ -37,7 +37,6 @@ if __name__ == "__main__":
         device = get_device()
     else:
         device = torch.device(args.device)
-
     output_root_dir = Path("output")
     output_base_dir = output_root_dir / args.config.replace(".yml",
                                                             "").split("/")[-1]
