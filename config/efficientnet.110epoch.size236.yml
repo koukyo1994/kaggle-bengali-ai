@@ -136,6 +136,7 @@ callbacks:
 
 log_dir: log/
 num_workers: 4
+main_metric: tar
 seed: 1213
 img_size: 236
 weights:
