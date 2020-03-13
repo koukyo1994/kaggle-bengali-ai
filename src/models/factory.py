@@ -218,16 +218,9 @@ class Efficient(nn.Module):
 
         if head == "linear":
             n_in_features = self.base._fc.in_features
-            self.base._fc = nn.Linear(n_in_features, self.num_classes)
-            arch = list(self.base.children())
-            arch.pop()  # delete last swish
-            self.base = nn.Sequential(*arch)
+            self.head = nn.Linear(n_in_features, self.num_classes)
         elif head == "custom":
             n_in_features = self.base._fc.in_features
-            arch = list(self.base.children())
-            for _ in range(4):
-                arch.pop()
-            self.base = nn.Sequential(*arch)
             if "grapheme" in self.outputs:
                 self.grapheme_head = nn.Sequential(
                     Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
@@ -242,10 +235,6 @@ class Efficient(nn.Module):
                     nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
         elif head == "scse":
             n_in_features = self.base._fc.in_features
-            arch = list(self.base.children())
-            for _ in range(4):
-                arch.pop()
-            self.base = nn.Sequential(*arch)
             if "grapheme" in self.outputs:
                 self.grapheme_head = nn.Sequential(
                     SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
@@ -263,9 +252,10 @@ class Efficient(nn.Module):
 
     def forward(self, x):
         if self.head == "linear":
-            return self.base(x)
+            x = self.base.extract_features(x)
+            return self.head(x)
         elif self.head == "custom" or self.head == "scse":
-            x = self.base(x)
+            x = self.base.extract_features(x)
             outputs = []
             if "grapheme" in self.outputs:
                 grapheme = self.grapheme_head(x)
