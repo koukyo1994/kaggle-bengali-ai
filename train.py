@@ -20,6 +20,7 @@ from src.validation import get_validation
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
+    parser.add_argument("--folds", nargs="*", type=int, required=True)
     parser.add_argument(
         "--debug", action="store_true", help="Whether to use debug mode")
     args = parser.parse_args()
@@ -51,6 +52,9 @@ if __name__ == "__main__":
     }
 
     for i, (trn_idx, val_idx) in enumerate(splits):
+        if i not in args.folds:
+            continue
+
         print(f"Fold: {i}")
 
         output_dir = output_base_dir / f"fold{i}"
@@ -96,4 +100,4 @@ if __name__ == "__main__":
             main_metric=config.main_metric,
             minimize_metric=False,
             monitoring_params=None,
-            verbose=True)
+            verbose=False)

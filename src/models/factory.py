@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 
 from easydict import EasyDict as edict
+from efficientnet_pytorch import EfficientNet
 from torch.nn.parameter import Parameter
 
 
@@ -194,6 +195,92 @@ class SEResNext(nn.Module):
             raise NotImplementedError
 
 
+class Efficient(nn.Module):
+    def __init__(self,
+                 model_name: str,
+                 num_classes: int,
+                 pretrained=False,
+                 head="linear",
+                 in_channels=3,
+                 outputs=["grapheme", "vowel", "consonant"]):
+        super().__init__()
+        self.num_classes = num_classes
+        if pretrained:
+            self.base = EfficientNet.from_pretrained(model_name)
+        else:
+            self.base = EfficientNet.from_name(model_name)
+        self.head = head
+        assert in_channels in [3]
+        assert head in ["linear", "custom", "scse"]
+        for out in outputs:
+            assert out in {"grapheme", "vowel", "consonant"}
+        self.outputs = outputs
+
+        if head == "linear":
+            n_in_features = self.base._fc.in_features
+            self.base._fc = nn.Linear(n_in_features, self.num_classes)
+            arch = list(self.base.children())
+            arch.pop()  # delete last swish
+            self.base = nn.Sequential(*arch)
+        elif head == "custom":
+            n_in_features = self.base._fc.in_features
+            arch = list(self.base.children())
+            for _ in range(4):
+                arch.pop()
+            self.base = nn.Sequential(*arch)
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    Mish(), nn.Conv2d(n_in_features, 512, kernel_size=3),
+                    nn.BatchNorm2d(512), GeM(), nn.Linear(512, 7))
+        elif head == "scse":
+            n_in_features = self.base._fc.in_features
+            arch = list(self.base.children())
+            for _ in range(4):
+                arch.pop()
+            self.base = nn.Sequential(*arch)
+            if "grapheme" in self.outputs:
+                self.grapheme_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 168))
+            if "vowel" in self.outputs:
+                self.vowel_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 11))
+            if "consonant" in self.outputs:
+                self.consonant_head = nn.Sequential(
+                    SCse(n_in_features), Mish(), nn.BatchNorm2d(512), GeM(),
+                    nn.Dropout(0.3), nn.Linear(512, 7))
+        else:
+            raise NotImplementedError
+
+    def forward(self, x):
+        if self.head == "linear":
+            return self.base(x)
+        elif self.head == "custom" or self.head == "scse":
+            x = self.base(x)
+            outputs = []
+            if "grapheme" in self.outputs:
+                grapheme = self.grapheme_head(x)
+                outputs.append(grapheme)
+            if "vowel" in self.outputs:
+                vowel = self.vowel_head(x)
+                outputs.append(vowel)
+            if "consonant" in self.outputs:
+                consonant = self.consonant_head(x)
+                outputs.append(consonant)
+            return torch.cat(outputs, dim=1)
+        else:
+            raise NotImplementedError
+
+
 class Resnet(nn.Module):
     def __init__(self,
                  model_name: str,
@@ -290,5 +377,7 @@ def get_model(config: edict):
         return Resnet(**params)
     elif "se_resnext" in params.model_name:
         return SEResNext(**params)
+    elif "efficientnet" in params.model_name:
+        return Efficient(**params)
     else:
         raise NotImplementedError

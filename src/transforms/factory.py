@@ -36,7 +36,7 @@ def get_transforms(config: edict, phase: str = "train"):
     if cfg.ShiftScaleRotate:
         list_transforms.append(
             A.ShiftScaleRotate(
-                shift_limit=0.0625, scale_limit=0, rotate_limit=7, p=0.5))
+                shift_limit=0.0625, scale_limit=0, rotate_limit=15, p=0.5))
     if cfg.RandomResizedCrop:
         list_transforms.append(
             A.RandomResizedCrop(128, 128, scale=(0.8, 1), p=0.5))

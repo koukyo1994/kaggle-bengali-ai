@@ -63,7 +63,7 @@ class MixupOrCutmixCallback(CriterionCallback):
         self.is_needed = not self.on_train_only or \
             state.loader_name.startswith("train")
 
-        if state.num_epochs - state.epoch < self.no_aug_epochs:
+        if state.num_epochs - state.epoch <= self.no_aug_epochs:
             self.is_needed = False
 
     def on_batch_start(self, state: RunnerState):
