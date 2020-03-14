@@ -1,0 +1,1250 @@
+{
+  "best": {
+    "loss": 0.3766102191992104,
+    "batch_grapheme_recall": 0.9408838886458226,
+    "batch_vowel_recall": 0.9842898356827067,
+    "batch_consonant_recall": 0.9847972313603961,
+    "_base/lr": 4.283813728906111e-05,
+    "_base/momentum": 0.9,
+    "_timers/data_time": 0.025819897651672353,
+    "_timers/model_time": 0.026936948299407962,
+    "_timers/batch_time": 0.05280967354774474,
+    "_timers/_fps": 4866.162313860472,
+    "grapheme_recall": 0.958576642650742,
+    "vowel_recall": 0.9860048973997076,
+    "consonant_recall": 0.9866040287195682,
+    "tar": 0.97244055285519
+  },
+  "last": {
+    "loss": 0.37614016048610205,
+    "batch_grapheme_recall": 0.9365758054325726,
+    "batch_vowel_recall": 0.9796326811043907,
+    "batch_consonant_recall": 0.9783093141891792,
+    "_base/lr": 5.260621571845852e-05,
+    "_base/momentum": 0.9,
+    "_timers/data_time": 0.024279999732971187,
+    "_timers/model_time": 0.03047119975090026,
+    "_timers/batch_time": 0.054808276891708356,
+    "_timers/_fps": 4301.944857749663,
+    "grapheme_recall": 0.9508724323204418,
+    "vowel_recall": 0.9837186854694483,
+    "consonant_recall": 0.98504140268101,
+    "tar": 0.9676262381978356
+  },
+  "train.57": {
+    "loss": 0.3766102191992104,
+    "batch_grapheme_recall": 0.9408838886458226,
+    "batch_vowel_recall": 0.9842898356827067,
+    "batch_consonant_recall": 0.9847972313603961,
+    "_base/lr": 4.283813728906111e-05,
+    "_base/momentum": 0.9,
+    "_timers/data_time": 0.025819897651672353,
+    "_timers/model_time": 0.026936948299407962,
+    "_timers/batch_time": 0.05280967354774474,
+    "_timers/_fps": 4866.162313860472,
+    "grapheme_recall": 0.958576642650742,
+    "vowel_recall": 0.9860048973997076,
+    "consonant_recall": 0.9866040287195682,
+    "tar": 0.97244055285519
+  },
+  "epoch_0": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.1.pth",
+    0.5081337518916724,
+    {
+      "loss": 5.065881657600402,
+      "batch_grapheme_recall": 0.3722329509586129,
+      "batch_vowel_recall": 0.8073485063253641,
+      "batch_consonant_recall": 0.8059943741865444,
+      "_base/lr": 5e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.030938398838043203,
+      "_timers/model_time": 0.03498956561088562,
+      "_timers/batch_time": 0.06598183512687683,
+      "_timers/_fps": 4107.975547639967,
+      "grapheme_recall": 0.2586798005722956,
+      "vowel_recall": 0.8048098717987685,
+      "consonant_recall": 0.7103655346233299,
+      "tar": 0.5081337518916724
+    }
+  ],
+  "epoch_1": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.2.pth",
+    0.7353623467909838,
+    {
+      "loss": 2.321122217178345,
+      "batch_grapheme_recall": 0.6522585706443529,
+      "batch_vowel_recall": 0.9107293420183542,
+      "batch_consonant_recall": 0.8631626374583288,
+      "_base/lr": 4.758276912222226e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02707023620605467,
+      "_timers/model_time": 0.028011155128479,
+      "_timers/batch_time": 0.05513635873794556,
+      "_timers/_fps": 4463.876433379869,
+      "grapheme_recall": 0.5996732130611766,
+      "vowel_recall": 0.9211273079455847,
+      "consonant_recall": 0.8209756530959973,
+      "tar": 0.7353623467909838
+    }
+  ],
+  "epoch_2": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.3.pth",
+    0.856546945063062,
+    {
+      "loss": 1.4246470242738725,
+      "batch_grapheme_recall": 0.7675975440840137,
+      "batch_vowel_recall": 0.9353288804674319,
+      "batch_consonant_recall": 0.9280598528580498,
+      "_base/lr": 4.193295348706216e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024579334259033213,
+      "_timers/model_time": 0.029948306083679196,
+      "_timers/batch_time": 0.05458115339279175,
+      "_timers/_fps": 4386.715357516661,
+      "grapheme_recall": 0.7831951611679238,
+      "vowel_recall": 0.9416943384844223,
+      "consonant_recall": 0.9181031194319781,
+      "tar": 0.856546945063062
+    }
+  ],
+  "epoch_3": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.4.pth",
+    0.8822191135773263,
+    {
+      "loss": 1.2819370463490485,
+      "batch_grapheme_recall": 0.7945022440445717,
+      "batch_vowel_recall": 0.9475320335620888,
+      "batch_consonant_recall": 0.9414345145118967,
+      "_base/lr": 3.4840220064772684e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024608182907104502,
+      "_timers/model_time": 0.0294102132320404,
+      "_timers/batch_time": 0.05406917929649354,
+      "_timers/_fps": 4452.706647814399,
+      "grapheme_recall": 0.8193796399260302,
+      "vowel_recall": 0.9593879133873048,
+      "consonant_recall": 0.93072926106994,
+      "tar": 0.8822191135773263
+    }
+  ],
+  "epoch_4": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.5.pth",
+    0.9021850429409985,
+    {
+      "loss": 0.9686745569109917,
+      "batch_grapheme_recall": 0.8268316166102953,
+      "batch_vowel_recall": 0.9639217768993703,
+      "batch_consonant_recall": 0.9453491627098838,
+      "_base/lr": 2.6979805504056702e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02585703134536742,
+      "_timers/model_time": 0.028616100549697876,
+      "_timers/batch_time": 0.05452544093132019,
+      "_timers/_fps": 4657.811249434039,
+      "grapheme_recall": 0.8568766552935966,
+      "vowel_recall": 0.9653585568521407,
+      "consonant_recall": 0.9296283043246604,
+      "tar": 0.9021850429409985
+    }
+  ],
+  "epoch_5": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.6.pth",
+    0.912588790101374,
+    {
+      "loss": 0.8812532484531402,
+      "batch_grapheme_recall": 0.8463059172776628,
+      "batch_vowel_recall": 0.9599748290678064,
+      "batch_consonant_recall": 0.9557804434622317,
+      "_base/lr": 1.9098300562505256e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02334824800491333,
+      "_timers/model_time": 0.02801933884620667,
+      "_timers/batch_time": 0.05141679644584657,
+      "_timers/_fps": 4733.37153570834,
+      "grapheme_recall": 0.8684929330121857,
+      "vowel_recall": 0.9666758119097469,
+      "consonant_recall": 0.9466934824713779,
+      "tar": 0.912588790101374
+    }
+  ],
+  "epoch_6": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.7.pth",
+    0.9239596643378856,
+    {
+      "loss": 0.8085211858153344,
+      "batch_grapheme_recall": 0.8624760457547912,
+      "batch_vowel_recall": 0.9659341477352017,
+      "batch_consonant_recall": 0.9609538601112925,
+      "_base/lr": 1.1936437851565787e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02595816850662233,
+      "_timers/model_time": 0.028120571374893183,
+      "_timers/batch_time": 0.05413206219673157,
+      "_timers/_fps": 4571.0385251009975,
+      "grapheme_recall": 0.8883626057907005,
+      "vowel_recall": 0.9720097572616571,
+      "consonant_recall": 0.9471036885084841,
+      "tar": 0.9239596643378856
+    }
+  ],
+  "epoch_7": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.8.pth",
+    0.9192627964581584,
+    {
+      "loss": 0.8191294729709627,
+      "batch_grapheme_recall": 0.8533489772243428,
+      "batch_vowel_recall": 0.963198595415939,
+      "batch_consonant_recall": 0.9577742608922818,
+      "_base/lr": 6.147799469896953e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024373030662536623,
+      "_timers/model_time": 0.029947531223297113,
+      "_timers/batch_time": 0.0543759822845459,
+      "_timers/_fps": 4434.366140606662,
+      "grapheme_recall": 0.8776420306317108,
+      "vowel_recall": 0.9686639940027671,
+      "consonant_recall": 0.9531031305664451,
+      "tar": 0.9192627964581584
+    }
+  ],
+  "epoch_8": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.9.pth",
+    0.9281883962657363,
+    {
+      "loss": 0.7813282340764998,
+      "batch_grapheme_recall": 0.8655724370904962,
+      "batch_vowel_recall": 0.968250181473843,
+      "batch_consonant_recall": 0.9672128453173121,
+      "_base/lr": 2.212105986044084e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02372050285339357,
+      "_timers/model_time": 0.028675925731658936,
+      "_timers/batch_time": 0.05244784951210022,
+      "_timers/_fps": 4534.67702451075,
+      "grapheme_recall": 0.8875235160981083,
+      "vowel_recall": 0.9712276171087478,
+      "consonant_recall": 0.9664789357579807,
+      "tar": 0.9281883962657363
+    }
+  ],
+  "epoch_9": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.10.pth",
+    0.9278528948412623,
+    {
+      "loss": 0.7700681760907174,
+      "batch_grapheme_recall": 0.8668912402447789,
+      "batch_vowel_recall": 0.9645605269159826,
+      "batch_consonant_recall": 0.9624065870507041,
+      "_base/lr": 3.135703867114578e-07,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023335677385330215,
+      "_timers/model_time": 0.030943131446838378,
+      "_timers/batch_time": 0.0543338358402252,
+      "_timers/_fps": 4521.222070648058,
+      "grapheme_recall": 0.887842193097069,
+      "vowel_recall": 0.9697877578709384,
+      "consonant_recall": 0.9659394352999726,
+      "tar": 0.9278528948412623
+    }
+  ],
+  "epoch_10": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.11.pth",
+    0.9233675034334428,
+    {
+      "loss": 0.7737442210316658,
+      "batch_grapheme_recall": 0.8676030362526241,
+      "batch_vowel_recall": 0.9639572182312578,
+      "batch_consonant_recall": 0.9632165060935731,
+      "_base/lr": 0.0,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.022775930166244504,
+      "_timers/model_time": 0.030115360021591188,
+      "_timers/batch_time": 0.052948194742202775,
+      "_timers/_fps": 4446.605294256358,
+      "grapheme_recall": 0.8875935639215271,
+      "vowel_recall": 0.9685133273013655,
+      "consonant_recall": 0.9497695585893516,
+      "tar": 0.9233675034334428
+    }
+  ],
+  "epoch_11": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.12.pth",
+    0.929263821274193,
+    {
+      "loss": 0.766003502905369,
+      "batch_grapheme_recall": 0.8676080786992814,
+      "batch_vowel_recall": 0.9680883133081849,
+      "batch_consonant_recall": 0.9701984579624382,
+      "_base/lr": 2.4471741852423237e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023358637094497682,
+      "_timers/model_time": 0.028770059347152717,
+      "_timers/batch_time": 0.052180379629135125,
+      "_timers/_fps": 4586.21076782725,
+      "grapheme_recall": 0.8908566035050365,
+      "vowel_recall": 0.9712563722174067,
+      "consonant_recall": 0.9640857058692929,
+      "tar": 0.929263821274193
+    }
+  ],
+  "epoch_12": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.13.pth",
+    0.9306896627442021,
+    {
+      "loss": 0.7662877306342125,
+      "batch_grapheme_recall": 0.8662952454182266,
+      "batch_vowel_recall": 0.9605432495035218,
+      "batch_consonant_recall": 0.9667221949299029,
+      "_base/lr": 1.863093188131977e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.022342801094055165,
+      "_timers/model_time": 0.026683497428894053,
+      "_timers/batch_time": 0.04907611012458801,
+      "_timers/_fps": 5015.273927386611,
+      "grapheme_recall": 0.8934921124447912,
+      "vowel_recall": 0.968490121841916,
+      "consonant_recall": 0.9672843042453102,
+      "tar": 0.9306896627442021
+    }
+  ],
+  "epoch_13": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.14.pth",
+    0.9329437816018867,
+    {
+      "loss": 0.7426415160298347,
+      "batch_grapheme_recall": 0.8755973497806528,
+      "batch_vowel_recall": 0.9666336204185345,
+      "batch_consonant_recall": 0.9682562429595181,
+      "_base/lr": 2.2242947438105863e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.022578263282775873,
+      "_timers/model_time": 0.029460716247558603,
+      "_timers/batch_time": 0.052088987827301,
+      "_timers/_fps": 4523.558400473521,
+      "grapheme_recall": 0.8975324270207882,
+      "vowel_recall": 0.9717392730131589,
+      "consonant_recall": 0.9649709993528116,
+      "tar": 0.9329437816018867
+    }
+  ],
+  "epoch_14": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.15.pth",
+    0.9348639920953701,
+    {
+      "loss": 0.7268068790435791,
+      "batch_grapheme_recall": 0.8718033144104088,
+      "batch_vowel_recall": 0.9643590312943351,
+      "batch_consonant_recall": 0.9699868180048,
+      "_base/lr": 2.8956843290902683e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.027349686622619614,
+      "_timers/model_time": 0.02996188402175903,
+      "_timers/batch_time": 0.05736693143844603,
+      "_timers/_fps": 4294.99977141613,
+      "grapheme_recall": 0.8996469308918241,
+      "vowel_recall": 0.9689856703970946,
+      "consonant_recall": 0.9711764362007376,
+      "tar": 0.9348639920953701
+    }
+  ],
+  "epoch_15": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.16.pth",
+    0.9338108489559813,
+    {
+      "loss": 0.7087044447660447,
+      "batch_grapheme_recall": 0.8791660605261054,
+      "batch_vowel_recall": 0.969452449478044,
+      "batch_consonant_recall": 0.9717481150715709,
+      "_base/lr": 3.618033988749911e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023148727416992178,
+      "_timers/model_time": 0.02705747485160827,
+      "_timers/batch_time": 0.050258159637451165,
+      "_timers/_fps": 4688.450002210805,
+      "grapheme_recall": 0.9003190300377388,
+      "vowel_recall": 0.9733735208327962,
+      "consonant_recall": 0.9612318149156517,
+      "tar": 0.9338108489559813
+    }
+  ],
+  "epoch_16": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.17.pth",
+    0.9395008029859868,
+    {
+      "loss": 0.6753774724900721,
+      "batch_grapheme_recall": 0.8798689688683111,
+      "batch_vowel_recall": 0.9678119941985722,
+      "batch_consonant_recall": 0.9700368533622785,
+      "_base/lr": 4.283813728906072e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.026058024168014535,
+      "_timers/model_time": 0.028268676996231076,
+      "_timers/batch_time": 0.05437927246093748,
+      "_timers/_fps": 4592.454620969302,
+      "grapheme_recall": 0.9060987686408127,
+      "vowel_recall": 0.9713313621503024,
+      "consonant_recall": 0.9744743125120194,
+      "tar": 0.9395008029859868
+    }
+  ],
+  "epoch_17": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.18.pth",
+    0.9352893082500816,
+    {
+      "loss": 0.6558474913239479,
+      "batch_grapheme_recall": 0.8803144256262553,
+      "batch_vowel_recall": 0.9687330578962351,
+      "batch_consonant_recall": 0.9677878718643758,
+      "_base/lr": 4.814799995399e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.0267580270767212,
+      "_timers/model_time": 0.02818356752395629,
+      "_timers/batch_time": 0.054996216297149667,
+      "_timers/_fps": 4599.268885977033,
+      "grapheme_recall": 0.9056586342236709,
+      "vowel_recall": 0.9736962689736973,
+      "consonant_recall": 0.9561436955792875,
+      "tar": 0.9352893082500816
+    }
+  ],
+  "epoch_18": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.19.pth",
+    0.9390455221500132,
+    {
+      "loss": 0.6387057833373551,
+      "batch_grapheme_recall": 0.8903400222952538,
+      "batch_vowel_recall": 0.969895208822169,
+      "batch_consonant_recall": 0.968044372636444,
+      "_base/lr": 5.152684346344111e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025190651416778558,
+      "_timers/model_time": 0.02789759039878845,
+      "_timers/batch_time": 0.05313698053359987,
+      "_timers/_fps": 4663.7369779611445,
+      "grapheme_recall": 0.9145460355417934,
+      "vowel_recall": 0.9736988793941355,
+      "consonant_recall": 0.9533911381223307,
+      "tar": 0.9390455221500132
+    }
+  ],
+  "epoch_19": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.20.pth",
+    0.9444484151468786,
+    {
+      "loss": 0.6012166552245618,
+      "batch_grapheme_recall": 0.8979960650014227,
+      "batch_vowel_recall": 0.9664929911586841,
+      "batch_consonant_recall": 0.964857706834297,
+      "_base/lr": 5.2606215718457966e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02442017197608947,
+      "_timers/model_time": 0.028473168611526496,
+      "_timers/batch_time": 0.05294866561889649,
+      "_timers/_fps": 4505.4932433542945,
+      "grapheme_recall": 0.9254722507094613,
+      "vowel_recall": 0.973347989105164,
+      "consonant_recall": 0.953501170063428,
+      "tar": 0.9444484151468786
+    }
+  ],
+  "epoch_20": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.21.pth",
+    0.9486970896841384,
+    {
+      "loss": 0.5600571461021899,
+      "batch_grapheme_recall": 0.9011410094625137,
+      "batch_vowel_recall": 0.976036543385699,
+      "batch_consonant_recall": 0.9737944407244926,
+      "_base/lr": 5.125428154684605e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.026176577806472787,
+      "_timers/model_time": 0.028127211332321163,
+      "_timers/batch_time": 0.05435346961021424,
+      "_timers/_fps": 4587.1878333081495,
+      "grapheme_recall": 0.9227169058713072,
+      "vowel_recall": 0.9800278076342405,
+      "consonant_recall": 0.9693267393596984,
+      "tar": 0.9486970896841384
+    }
+  ],
+  "epoch_21": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.22.pth",
+    0.9483301285400463,
+    {
+      "loss": 0.5535375382751225,
+      "batch_grapheme_recall": 0.9071234399109765,
+      "batch_vowel_recall": 0.9691149408082299,
+      "batch_consonant_recall": 0.9721440210858873,
+      "_base/lr": 4.758276912222247e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025926262140274048,
+      "_timers/model_time": 0.027418780326843264,
+      "_timers/batch_time": 0.05339778065681459,
+      "_timers/_fps": 4673.981784354756,
+      "grapheme_recall": 0.9237853573116513,
+      "vowel_recall": 0.9751187305201249,
+      "consonant_recall": 0.9706310690167579,
+      "tar": 0.9483301285400463
+    }
+  ],
+  "epoch_22": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.23.pth",
+    0.9536655953251192,
+    {
+      "loss": 0.5224151603877546,
+      "batch_grapheme_recall": 0.9158342544388203,
+      "batch_vowel_recall": 0.9703428008842641,
+      "batch_consonant_recall": 0.9731137812834086,
+      "_base/lr": 4.1932953487062374e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02200675010681153,
+      "_timers/model_time": 0.027934157848358156,
+      "_timers/batch_time": 0.04999051094055178,
+      "_timers/_fps": 4680.407492467643,
+      "grapheme_recall": 0.9350526489179803,
+      "vowel_recall": 0.9733694661623203,
+      "consonant_recall": 0.9711876173021958,
+      "tar": 0.9536655953251192
+    }
+  ],
+  "epoch_23": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.24.pth",
+    0.9452402819451731,
+    {
+      "loss": 0.5583618495613336,
+      "batch_grapheme_recall": 0.9013479945616188,
+      "batch_vowel_recall": 0.9731886991619783,
+      "batch_consonant_recall": 0.9694170045598064,
+      "_base/lr": 3.4840220064772833e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025785034894943243,
+      "_timers/model_time": 0.028307521343231206,
+      "_timers/batch_time": 0.05414592027664185,
+      "_timers/_fps": 4559.923688177882,
+      "grapheme_recall": 0.917477731848381,
+      "vowel_recall": 0.9744231266355385,
+      "consonant_recall": 0.9715825374483918,
+      "tar": 0.9452402819451731
+    }
+  ],
+  "epoch_24": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.25.pth",
+    0.9527962485901197,
+    {
+      "loss": 0.4847257759422064,
+      "batch_grapheme_recall": 0.9135157356219175,
+      "batch_vowel_recall": 0.9739753660639568,
+      "batch_consonant_recall": 0.974259871819688,
+      "_base/lr": 2.6979805504056824e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.0271579086780548,
+      "_timers/model_time": 0.02599151134490967,
+      "_timers/batch_time": 0.05319822430610658,
+      "_timers/_fps": 4794.610568978874,
+      "grapheme_recall": 0.9334639971512677,
+      "vowel_recall": 0.9774149790866061,
+      "consonant_recall": 0.9668420209713374,
+      "tar": 0.9527962485901197
+    }
+  ],
+  "epoch_25": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.26.pth",
+    0.9546950919296553,
+    {
+      "loss": 0.4628197502344847,
+      "batch_grapheme_recall": 0.922044774573763,
+      "batch_vowel_recall": 0.9758677114484965,
+      "batch_consonant_recall": 0.9752981683745865,
+      "_base/lr": 1.9098300562505344e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02211307883262633,
+      "_timers/model_time": 0.02774252891540528,
+      "_timers/batch_time": 0.04990521073341371,
+      "_timers/_fps": 4783.955128602244,
+      "grapheme_recall": 0.935150215946148,
+      "vowel_recall": 0.9779418651549492,
+      "consonant_recall": 0.970538070671376,
+      "tar": 0.9546950919296553
+    }
+  ],
+  "epoch_26": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.27.pth",
+    0.960426264493796,
+    {
+      "loss": 0.4614961966872215,
+      "batch_grapheme_recall": 0.922636625287957,
+      "batch_vowel_recall": 0.9733754594844192,
+      "batch_consonant_recall": 0.9756257372754579,
+      "_base/lr": 1.1936437851565845e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025857526063919056,
+      "_timers/model_time": 0.028154593706130982,
+      "_timers/batch_time": 0.0540615916252136,
+      "_timers/_fps": 4600.956565099917,
+      "grapheme_recall": 0.9433844858457034,
+      "vowel_recall": 0.9801280564553964,
+      "consonant_recall": 0.9748080298283803,
+      "tar": 0.960426264493796
+    }
+  ],
+  "epoch_27": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.28.pth",
+    0.9569760201020272,
+    {
+      "loss": 0.4467601902782917,
+      "batch_grapheme_recall": 0.9265284483280491,
+      "batch_vowel_recall": 0.9739499058942163,
+      "batch_consonant_recall": 0.9743811000898797,
+      "_base/lr": 6.147799469896983e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02686622142791749,
+      "_timers/model_time": 0.029238831996917722,
+      "_timers/batch_time": 0.05615663528442383,
+      "_timers/_fps": 4296.5745838484545,
+      "grapheme_recall": 0.9414772256064874,
+      "vowel_recall": 0.9806859947944215,
+      "consonant_recall": 0.9642636344007123,
+      "tar": 0.9569760201020272
+    }
+  ],
+  "epoch_28": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.29.pth",
+    0.9585943475637927,
+    {
+      "loss": 0.4360804185271262,
+      "batch_grapheme_recall": 0.9264800820244383,
+      "batch_vowel_recall": 0.97862695469083,
+      "batch_consonant_recall": 0.9773877581944344,
+      "_base/lr": 2.212105986044096e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024373966455459584,
+      "_timers/model_time": 0.028555363416671753,
+      "_timers/batch_time": 0.05297732949256898,
+      "_timers/_fps": 4704.770333493805,
+      "grapheme_recall": 0.9426078889904626,
+      "vowel_recall": 0.9816611955476197,
+      "consonant_recall": 0.967500416726626,
+      "tar": 0.9585943475637927
+    }
+  ],
+  "epoch_29": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.30.pth",
+    0.9618843054927001,
+    {
+      "loss": 0.4330263802781702,
+      "batch_grapheme_recall": 0.9302767063303664,
+      "batch_vowel_recall": 0.976256881307642,
+      "batch_consonant_recall": 0.9794679182863136,
+      "_base/lr": 3.135703867114605e-07,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023303371667861943,
+      "_timers/model_time": 0.030509901046752934,
+      "_timers/batch_time": 0.05386838912963865,
+      "_timers/_fps": 4382.994944664838,
+      "grapheme_recall": 0.9433269280629116,
+      "vowel_recall": 0.9816369183065334,
+      "consonant_recall": 0.9792464475384438,
+      "tar": 0.9618843054927001
+    }
+  ],
+  "epoch_30": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.31.pth",
+    0.9597357804488882,
+    {
+      "loss": 0.4421194398775697,
+      "batch_grapheme_recall": 0.9262999830068597,
+      "batch_vowel_recall": 0.9741471923808367,
+      "batch_consonant_recall": 0.9784467266680936,
+      "_base/lr": 0.0,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.022660207748413083,
+      "_timers/model_time": 0.029025167226791382,
+      "_timers/batch_time": 0.051737463474273694,
+      "_timers/_fps": 4585.889212491999,
+      "grapheme_recall": 0.9420869197037843,
+      "vowel_recall": 0.9795695863908346,
+      "consonant_recall": 0.9751996959971498,
+      "tar": 0.9597357804488882
+    }
+  ],
+  "epoch_31": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.32.pth",
+    0.95526559306118,
+    {
+      "loss": 0.438618496991694,
+      "batch_grapheme_recall": 0.9277528429705888,
+      "batch_vowel_recall": 0.9775768863376029,
+      "batch_consonant_recall": 0.9728225052839133,
+      "_base/lr": 2.4471741852423237e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024458116292953486,
+      "_timers/model_time": 0.027476787567138672,
+      "_timers/batch_time": 0.05198395848274233,
+      "_timers/_fps": 4801.04804316761,
+      "grapheme_recall": 0.9392011463040998,
+      "vowel_recall": 0.9809196758144556,
+      "consonant_recall": 0.9617404038220646,
+      "tar": 0.95526559306118
+    }
+  ],
+  "epoch_32": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.33.pth",
+    0.9604111162939384,
+    {
+      "loss": 0.43547716792672875,
+      "batch_grapheme_recall": 0.930956993550852,
+      "batch_vowel_recall": 0.9776657850768011,
+      "batch_consonant_recall": 0.981362382660845,
+      "_base/lr": 1.8630931881319665e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.022797769308090222,
+      "_timers/model_time": 0.029390186071395864,
+      "_timers/batch_time": 0.05224579572677612,
+      "_timers/_fps": 4664.231824782603,
+      "grapheme_recall": 0.9402556349220157,
+      "vowel_recall": 0.980645737941552,
+      "consonant_recall": 0.9804874573901702,
+      "tar": 0.9604111162939384
+    }
+  ],
+  "epoch_33": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.34.pth",
+    0.9581210786931151,
+    {
+      "loss": 0.4376890741288662,
+      "batch_grapheme_recall": 0.928397775231996,
+      "batch_vowel_recall": 0.9764326160724885,
+      "batch_consonant_recall": 0.976896709219948,
+      "_base/lr": 2.22429474381058e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025609779357910166,
+      "_timers/model_time": 0.03013933897018433,
+      "_timers/batch_time": 0.05580313801765443,
+      "_timers/_fps": 4291.061977391225,
+      "grapheme_recall": 0.9449443179817592,
+      "vowel_recall": 0.9795425494301675,
+      "consonant_recall": 0.9630531293787747,
+      "tar": 0.9581210786931151
+    }
+  ],
+  "epoch_34": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.35.pth",
+    0.9587216268133852,
+    {
+      "loss": 0.4515325024724006,
+      "batch_grapheme_recall": 0.9266777687023169,
+      "batch_vowel_recall": 0.9760252012254406,
+      "batch_consonant_recall": 0.9775440220834725,
+      "_base/lr": 2.8956843290902605e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.026408535242080686,
+      "_timers/model_time": 0.0289943277835846,
+      "_timers/batch_time": 0.05546123981475831,
+      "_timers/_fps": 4412.285305931004,
+      "grapheme_recall": 0.9404054308783446,
+      "vowel_recall": 0.9793489101962823,
+      "consonant_recall": 0.9747267353005694,
+      "tar": 0.9587216268133852
+    }
+  ],
+  "epoch_35": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.36.pth",
+    0.9600854917989057,
+    {
+      "loss": 0.4395286420360207,
+      "batch_grapheme_recall": 0.9304600481151297,
+      "batch_vowel_recall": 0.9774902557919031,
+      "batch_consonant_recall": 0.9781778809335113,
+      "_base/lr": 3.6180339887499035e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025072354078292836,
+      "_timers/model_time": 0.030951696634292602,
+      "_timers/batch_time": 0.05608062148094177,
+      "_timers/_fps": 4135.420666626172,
+      "grapheme_recall": 0.9424445869656621,
+      "vowel_recall": 0.9802259267896375,
+      "consonant_recall": 0.9752268664746608,
+      "tar": 0.9600854917989057
+    }
+  ],
+  "epoch_36": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.37.pth",
+    0.9614247666121397,
+    {
+      "loss": 0.43865017537027595,
+      "batch_grapheme_recall": 0.9310283781406967,
+      "batch_vowel_recall": 0.975540646771795,
+      "batch_consonant_recall": 0.9781537695549908,
+      "_base/lr": 4.283813728906063e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02519621849060058,
+      "_timers/model_time": 0.03013527989387512,
+      "_timers/batch_time": 0.05538405179977418,
+      "_timers/_fps": 4316.159549742983,
+      "grapheme_recall": 0.942851656269028,
+      "vowel_recall": 0.9794950230584692,
+      "consonant_recall": 0.9805007308520338,
+      "tar": 0.9614247666121397
+    }
+  ],
+  "epoch_37": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.38.pth",
+    0.9573771936363615,
+    {
+      "loss": 0.43492429926991466,
+      "batch_grapheme_recall": 0.9238319464546988,
+      "batch_vowel_recall": 0.9759444618307863,
+      "batch_consonant_recall": 0.977090411248063,
+      "_base/lr": 4.814799995398991e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.029883927106857302,
+      "_timers/model_time": 0.03116763830184936,
+      "_timers/batch_time": 0.061115497350692743,
+      "_timers/_fps": 4118.247954731563,
+      "grapheme_recall": 0.9401537731196176,
+      "vowel_recall": 0.9813708131492965,
+      "consonant_recall": 0.9678304151569143,
+      "tar": 0.9573771936363615
+    }
+  ],
+  "epoch_38": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.39.pth",
+    0.9539417917816281,
+    {
+      "loss": 0.488390715420246,
+      "batch_grapheme_recall": 0.9142251168879637,
+      "batch_vowel_recall": 0.9786004425989652,
+      "batch_consonant_recall": 0.97499207312173,
+      "_base/lr": 5.152684346344098e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025698274374008165,
+      "_timers/model_time": 0.027065593004226684,
+      "_timers/batch_time": 0.05281605720520021,
+      "_timers/_fps": 4852.9952359645495,
+      "grapheme_recall": 0.930299704582531,
+      "vowel_recall": 0.9827121561360478,
+      "consonant_recall": 0.9724556018254026,
+      "tar": 0.9539417917816281
+    }
+  ],
+  "epoch_39": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.40.pth",
+    0.9613941216461325,
+    {
+      "loss": 0.42089469321072115,
+      "batch_grapheme_recall": 0.931480091802385,
+      "batch_vowel_recall": 0.9806735783199201,
+      "batch_consonant_recall": 0.9815041339332018,
+      "_base/lr": 5.2606215718457865e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025229203701019283,
+      "_timers/model_time": 0.027133113145828246,
+      "_timers/batch_time": 0.052413487434387215,
+      "_timers/_fps": 4772.056329474807,
+      "grapheme_recall": 0.9432287455739609,
+      "vowel_recall": 0.9814743671264665,
+      "consonant_recall": 0.9776446283101418,
+      "tar": 0.9613941216461325
+    }
+  ],
+  "epoch_40": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.41.pth",
+    0.9610223774159367,
+    {
+      "loss": 0.4470384187996387,
+      "batch_grapheme_recall": 0.9281176234903069,
+      "batch_vowel_recall": 0.9768504266189275,
+      "batch_consonant_recall": 0.9816531117834618,
+      "_base/lr": 5.125428154684597e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02506134510040282,
+      "_timers/model_time": 0.029235911369323735,
+      "_timers/batch_time": 0.05434845685958861,
+      "_timers/_fps": 4587.511668743119,
+      "grapheme_recall": 0.941599861824377,
+      "vowel_recall": 0.9801430097919464,
+      "consonant_recall": 0.9807467762230463,
+      "tar": 0.9610223774159367
+    }
+  ],
+  "epoch_41": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.42.pth",
+    0.9649525572389568,
+    {
+      "loss": 0.42667504176497467,
+      "batch_grapheme_recall": 0.9347711919782294,
+      "batch_vowel_recall": 0.9738990966156741,
+      "batch_consonant_recall": 0.9754081739038803,
+      "_base/lr": 4.758276912222242e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024963241815567007,
+      "_timers/model_time": 0.03098502159118652,
+      "_timers/batch_time": 0.05600288510322571,
+      "_timers/_fps": 4224.627635763636,
+      "grapheme_recall": 0.9489747151772173,
+      "vowel_recall": 0.979375200695926,
+      "consonant_recall": 0.9824855979054663,
+      "tar": 0.9649525572389568
+    }
+  ],
+  "epoch_42": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.43.pth",
+    0.9606269179361804,
+    {
+      "loss": 0.4296832332387568,
+      "batch_grapheme_recall": 0.92613672678275,
+      "batch_vowel_recall": 0.9788597479651343,
+      "batch_consonant_recall": 0.9776344364738293,
+      "_base/lr": 4.193295348706226e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025327801704406752,
+      "_timers/model_time": 0.028009504079818722,
+      "_timers/batch_time": 0.05338940620422361,
+      "_timers/_fps": 4696.326622747838,
+      "grapheme_recall": 0.942142502344153,
+      "vowel_recall": 0.9829862603068137,
+      "consonant_recall": 0.9752364067496015,
+      "tar": 0.9606269179361804
+    }
+  ],
+  "epoch_43": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.44.pth",
+    0.9650131225484313,
+    {
+      "loss": 0.39524641036987307,
+      "batch_grapheme_recall": 0.9358570562100276,
+      "batch_vowel_recall": 0.9770667153055027,
+      "batch_consonant_recall": 0.9849122593245083,
+      "_base/lr": 3.4840220064772786e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02385616898536682,
+      "_timers/model_time": 0.029229360818862914,
+      "_timers/batch_time": 0.053134328126907354,
+      "_timers/_fps": 4535.503464626968,
+      "grapheme_recall": 0.9461721234713091,
+      "vowel_recall": 0.9805528136446428,
+      "consonant_recall": 0.9871554296064643,
+      "tar": 0.9650131225484313
+    }
+  ],
+  "epoch_44": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.45.pth",
+    0.9646703743263981,
+    {
+      "loss": 0.42590382080525163,
+      "batch_grapheme_recall": 0.92827648367975,
+      "batch_vowel_recall": 0.9807025974486739,
+      "batch_consonant_recall": 0.9767276312942932,
+      "_base/lr": 2.6979805504056858e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025260502099990857,
+      "_timers/model_time": 0.02781701087951659,
+      "_timers/batch_time": 0.053130352497100825,
+      "_timers/_fps": 4551.04303020545,
+      "grapheme_recall": 0.9467311792487795,
+      "vowel_recall": 0.9855486231916349,
+      "consonant_recall": 0.9796705156163986,
+      "tar": 0.9646703743263981
+    }
+  ],
+  "epoch_45": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.46.pth",
+    0.9606098395701836,
+    {
+      "loss": 0.40465544015169147,
+      "batch_grapheme_recall": 0.9337668033024077,
+      "batch_vowel_recall": 0.9777944443992721,
+      "batch_consonant_recall": 0.9740078017439339,
+      "_base/lr": 1.909830056250529e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.028171718120574958,
+      "_timers/model_time": 0.030070036649703976,
+      "_timers/batch_time": 0.05829630494117738,
+      "_timers/_fps": 4233.920264419097,
+      "grapheme_recall": 0.9414002957097484,
+      "vowel_recall": 0.9824831862364861,
+      "consonant_recall": 0.9771555806247518,
+      "tar": 0.9606098395701836
+    }
+  ],
+  "epoch_46": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.47.pth",
+    0.9662300304494776,
+    {
+      "loss": 0.39212899003177887,
+      "batch_grapheme_recall": 0.9428167277991726,
+      "batch_vowel_recall": 0.9784248635045057,
+      "batch_consonant_recall": 0.9759088303161659,
+      "_base/lr": 1.193643785156583e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023572343587875366,
+      "_timers/model_time": 0.02721014618873596,
+      "_timers/batch_time": 0.050832366943359394,
+      "_timers/_fps": 4981.079572016204,
+      "grapheme_recall": 0.9499339066865169,
+      "vowel_recall": 0.9853298139106342,
+      "consonant_recall": 0.9797224945142426,
+      "tar": 0.9662300304494776
+    }
+  ],
+  "epoch_47": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.48.pth",
+    0.9720002771258874,
+    {
+      "loss": 0.3539368882775307,
+      "batch_grapheme_recall": 0.9438939354123744,
+      "batch_vowel_recall": 0.9822751889131532,
+      "batch_consonant_recall": 0.9799982588416388,
+      "_base/lr": 6.147799469896933e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.027573078870773305,
+      "_timers/model_time": 0.028415030241012575,
+      "_timers/batch_time": 0.056040537357330326,
+      "_timers/_fps": 4531.074163464693,
+      "grapheme_recall": 0.9578305427421194,
+      "vowel_recall": 0.9865712582318427,
+      "consonant_recall": 0.9857687647874681,
+      "tar": 0.9720002771258874
+    }
+  ],
+  "epoch_48": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.49.pth",
+    0.9686607472468738,
+    {
+      "loss": 0.3602928190492094,
+      "batch_grapheme_recall": 0.9414682768308693,
+      "batch_vowel_recall": 0.9833123079389086,
+      "batch_consonant_recall": 0.9795525943321983,
+      "_base/lr": 2.212105986044101e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02539373040199279,
+      "_timers/model_time": 0.029986619949340817,
+      "_timers/batch_time": 0.05543304085731506,
+      "_timers/_fps": 4472.970860449986,
+      "grapheme_recall": 0.9518617976506667,
+      "vowel_recall": 0.984868549693987,
+      "consonant_recall": 0.986050843992175,
+      "tar": 0.9686607472468738
+    }
+  ],
+  "epoch_49": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.50.pth",
+    0.9698596078018538,
+    {
+      "loss": 0.366052176989615,
+      "batch_grapheme_recall": 0.9396531426998274,
+      "batch_vowel_recall": 0.9840946940116173,
+      "batch_consonant_recall": 0.9835047230580067,
+      "_base/lr": 3.1357038671146685e-07,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024192321300506595,
+      "_timers/model_time": 0.0300967276096344,
+      "_timers/batch_time": 0.05434285998344421,
+      "_timers/_fps": 4494.451027219169,
+      "grapheme_recall": 0.9556722197916007,
+      "vowel_recall": 0.9857526535291501,
+      "consonant_recall": 0.9823413380950636,
+      "tar": 0.9698596078018538
+    }
+  ],
+  "epoch_50": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.51.pth",
+    0.9692623320183877,
+    {
+      "loss": 0.3564954895526171,
+      "batch_grapheme_recall": 0.9427984754339357,
+      "batch_vowel_recall": 0.9828479427083163,
+      "batch_consonant_recall": 0.9838942559650089,
+      "_base/lr": 0.0,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024396252632141114,
+      "_timers/model_time": 0.029073274135589598,
+      "_timers/batch_time": 0.053522646427154534,
+      "_timers/_fps": 4383.600918198263,
+      "grapheme_recall": 0.9532321811137069,
+      "vowel_recall": 0.9842592058300172,
+      "consonant_recall": 0.9863257600161199,
+      "tar": 0.9692623320183877
+    }
+  ],
+  "epoch_51": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.52.pth",
+    0.9710298699201302,
+    {
+      "loss": 0.36197095299139614,
+      "batch_grapheme_recall": 0.9431306415935821,
+      "batch_vowel_recall": 0.9810069587950191,
+      "batch_consonant_recall": 0.9853555380142324,
+      "_base/lr": 2.4471741852423237e-06,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.0243429660797119,
+      "_timers/model_time": 0.029397708177566532,
+      "_timers/batch_time": 0.05379475355148315,
+      "_timers/_fps": 4468.261995990966,
+      "grapheme_recall": 0.9561664810173246,
+      "vowel_recall": 0.9850722250434832,
+      "consonant_recall": 0.9867142926023883,
+      "tar": 0.9710298699201302
+    }
+  ],
+  "epoch_52": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.53.pth",
+    0.9688364639315948,
+    {
+      "loss": 0.35907059377059336,
+      "batch_grapheme_recall": 0.9421040010404266,
+      "batch_vowel_recall": 0.9825910464245613,
+      "batch_consonant_recall": 0.9846835371942242,
+      "_base/lr": 1.8630931881320146e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.026150166988372803,
+      "_timers/model_time": 0.030014330148696897,
+      "_timers/batch_time": 0.05621715188026428,
+      "_timers/_fps": 4284.9433029958545,
+      "grapheme_recall": 0.9523086684817047,
+      "vowel_recall": 0.9843101401036013,
+      "consonant_recall": 0.9864183786593689,
+      "tar": 0.9688364639315948
+    }
+  ],
+  "epoch_53": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.54.pth",
+    0.9701116996447035,
+    {
+      "loss": 0.3674696495756506,
+      "batch_grapheme_recall": 0.9402182109019138,
+      "batch_vowel_recall": 0.9830050584251375,
+      "batch_consonant_recall": 0.9846340293775683,
+      "_base/lr": 2.2242947438106252e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02846919894218445,
+      "_timers/model_time": 0.02865694761276245,
+      "_timers/batch_time": 0.057181954383850105,
+      "_timers/_fps": 4353.297644629227,
+      "grapheme_recall": 0.954278033046033,
+      "vowel_recall": 0.9854146793253651,
+      "consonant_recall": 0.9864760531613824,
+      "tar": 0.9701116996447035
+    }
+  ],
+  "epoch_54": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.55.pth",
+    0.9703911194390147,
+    {
+      "loss": 0.36060661934316157,
+      "batch_grapheme_recall": 0.942990418165253,
+      "batch_vowel_recall": 0.9827549491068461,
+      "batch_consonant_recall": 0.9853233342615888,
+      "_base/lr": 2.895684329090289e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.02378337383270264,
+      "_timers/model_time": 0.02644638419151306,
+      "_timers/batch_time": 0.05028063058853151,
+      "_timers/_fps": 4707.949780263891,
+      "grapheme_recall": 0.9548363812552826,
+      "vowel_recall": 0.9845724267160765,
+      "consonant_recall": 0.9873192885294172,
+      "tar": 0.9703911194390147
+    }
+  ],
+  "epoch_55": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.56.pth",
+    0.9684520134887131,
+    {
+      "loss": 0.37981050796806815,
+      "batch_grapheme_recall": 0.9405515889773889,
+      "batch_vowel_recall": 0.9841801766941729,
+      "batch_consonant_recall": 0.9834831102032611,
+      "_base/lr": 3.618033988749964e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025117969512939455,
+      "_timers/model_time": 0.02880553007125854,
+      "_timers/batch_time": 0.05397455096244812,
+      "_timers/_fps": 4612.547518086257,
+      "grapheme_recall": 0.9528184503727343,
+      "vowel_recall": 0.9860398266516388,
+      "consonant_recall": 0.9821313265577453,
+      "tar": 0.9684520134887131
+    }
+  ],
+  "epoch_56": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.57.pth",
+    0.97244055285519,
+    {
+      "loss": 0.3766102191992104,
+      "batch_grapheme_recall": 0.9408838886458226,
+      "batch_vowel_recall": 0.9842898356827067,
+      "batch_consonant_recall": 0.9847972313603961,
+      "_base/lr": 4.283813728906111e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025819897651672353,
+      "_timers/model_time": 0.026936948299407962,
+      "_timers/batch_time": 0.05280967354774474,
+      "_timers/_fps": 4866.162313860472,
+      "grapheme_recall": 0.958576642650742,
+      "vowel_recall": 0.9860048973997076,
+      "consonant_recall": 0.9866040287195682,
+      "tar": 0.97244055285519
+    }
+  ],
+  "epoch_57": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.58.pth",
+    0.9691141724807383,
+    {
+      "loss": 0.3705950114876032,
+      "batch_grapheme_recall": 0.9414502126840564,
+      "batch_vowel_recall": 0.9808452524915144,
+      "batch_consonant_recall": 0.9830037288984493,
+      "_base/lr": 4.814799995399045e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.025978267192840587,
+      "_timers/model_time": 0.03141164183616638,
+      "_timers/batch_time": 0.05744872093200685,
+      "_timers/_fps": 4310.842947317685,
+      "grapheme_recall": 0.9560968053500516,
+      "vowel_recall": 0.9818839234535948,
+      "consonant_recall": 0.9823791557692553,
+      "tar": 0.9691141724807383
+    }
+  ],
+  "epoch_58": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.59.pth",
+    0.968958034675344,
+    {
+      "loss": 0.3945061476901173,
+      "batch_grapheme_recall": 0.940444567551469,
+      "batch_vowel_recall": 0.9763194542954987,
+      "batch_consonant_recall": 0.9757635398175397,
+      "_base/lr": 5.152684346344171e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.023768198490142833,
+      "_timers/model_time": 0.02999534010887146,
+      "_timers/batch_time": 0.053818702697753885,
+      "_timers/_fps": 4606.080772732776,
+      "grapheme_recall": 0.9547346051671969,
+      "vowel_recall": 0.981937283142917,
+      "consonant_recall": 0.9844256452240655,
+      "tar": 0.968958034675344
+    }
+  ],
+  "epoch_59": [
+    "output/efficientnet.110epoch.size236/fold0/checkpoints/train.60.pth",
+    0.9676262381978356,
+    {
+      "loss": 0.37614016048610205,
+      "batch_grapheme_recall": 0.9365758054325726,
+      "batch_vowel_recall": 0.9796326811043907,
+      "batch_consonant_recall": 0.9783093141891792,
+      "_base/lr": 5.260621571845852e-05,
+      "_base/momentum": 0.9,
+      "_timers/data_time": 0.024279999732971187,
+      "_timers/model_time": 0.03047119975090026,
+      "_timers/batch_time": 0.054808276891708356,
+      "_timers/_fps": 4301.944857749663,
+      "grapheme_recall": 0.9508724323204418,
+      "vowel_recall": 0.9837186854694483,
+      "consonant_recall": 0.98504140268101,
+      "tar": 0.9676262381978356
+    }
+  ]
+}
