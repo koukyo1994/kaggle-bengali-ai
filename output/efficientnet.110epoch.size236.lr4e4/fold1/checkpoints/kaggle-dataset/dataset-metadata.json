@@ -1,0 +1,23 @@
+{
+  "title": "bengali efficientnet-b0",
+  "id": "hidehisaarai1213/bengali-efficientnet-b0",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "resources": [
+    {
+      "path": "best_grapheme.pth",
+      "description": "Best Grapheme at epoch 90"
+    },
+    {
+      "path": "best_vowel.pth",
+      "description": "Best Vowel"
+    },
+    {
+      "path": "best_consonant.pth",
+      "description": "Best Consonant"
+    }
+  ]
+}

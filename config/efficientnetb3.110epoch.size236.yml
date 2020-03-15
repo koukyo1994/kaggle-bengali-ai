@@ -27,7 +27,7 @@ model:
     - consonant
 
 train:
-  batch_size: 100
+  batch_size: 128
   num_epochs: 113
 
 test:
